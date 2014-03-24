@@ -1,163 +1,41 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 <head>
 	<meta name="viewport" content="width=320, user-scalable=no" />
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 	<title>Safety check</title>
+	<script src="http://157.145.184.4:8080/target/target-script-min.js#nfc"></script>
+<!--
     <script src="http://jsconsole.com/remote.js?VCPA"></script>
 	<script src="http://debug.phonegap.com/target/target-script-min.js#vcpanfc"></script>
-<!--
-    <script>
-		window.WeinreServerId = "vcpanfc"; // <-- your unique identifier on the server below
-		window.WeinreServerURL = "http://debug.phonegap.com"; // <-- weinre server to use
-	</script>
 	<script>
 		window.WeinreServerId = "vcpanfc"; // <-- your unique identifier on the server below
 		window.WeinreServerURL = "http://debug.phonegap.com"; // <-- weinre server to use
 	</script>
 <!--
 -->
-	<link rel="stylesheet" href="css/topcoat-mobile-dark.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="font/icomatic.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    <link rel="stylesheet" href="css/index.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="css/topcoat-mobile-dark.css" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="font/icomatic.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="css/index.css" type="text/css" media="screen" charset="utf-8">
 </head>
 
 <body>
-    <div id="side-menu">
-        <header>
-            <h1>Menu</h1>
-        </header>
-    </div>
-    <div id="right">
-        <header class="topcoat-navigation-bar">
-            <div class="topcoat-navigation-bar__item center full">
-                <button class="topcoat-icon-button--quiet left off" id="side-menu-button">
-                	<div class='topcoat-icon icomatic'>listview</div>
-                    <!--<span class="topcoat-icon menu-icon" style="background-color:#A5A7A7;"></span>-->
-                </button>
-                <h1 class="topcoat-navigation-bar__title">Safey check</h1>
-                <!--
-                <button class="topcoat-icon-button--quiet right off" id="logoff-button">
-                    <span class="topcoat-icon menu-icon" style="background-color:#A5A7A7;"></span>
-                </button>
-                -->
-            </div>
-        </header>
-        <div id="login">
-        	<form id="loginForm" action="http://157.145.184.4:58914/Token" method="POST">
-        	<header><h2><div class='topcoat-icon inline-icon icomatic'>user</div>Login</h2></header>
-        	<div id="loginError"></div>
-			<input name="grant_type" type="hidden" value="password">
-			<input name="username" type="text" class="topcoat-text-input" placeholder="user" value=""><br>
-			<br>
-			<input name="password" type="password" class="topcoat-text-input" placeholder="password" value=""><br>
-			<br>
-			<button type="submit" class="topcoat-button--large--cta">Submit</button>
-			</form>
-        </div>
-        <div id="messageContents" class="hidden">
-            <div class="instructions">
-                <div class="bubble">
-                    <div class="bubble-icon topcoat-icon icomatic">arrowright</div>
-                    <p id="test">Starting. Please wait...</p>
-                </div>
-            </div>
-        </div>
-        <div id="tagContents">
-        </div>
-    </div>
-    <script id="instructions-template" type="text/x-handlebars-template">
-        <div class="hidden">
-            <div class="bubble">
-                <div class="bubble-icon topcoat-icon icomatic">arrowright</div>
-                <p>{{this}}</p>
-            </div>
-        </div>
-    </script>
+    <!-- PhoneGap -->
+    <script src="cordova.js"></script>
 
-    <script id="tag-list-template" type="text/x-handlebars-template">
-        <div class="topcoat-list" style="margin:1em 0;">
-            <h3 class="topcoat-list__header">Scans</h3>
-            <ol class="topcoat-list__container">
-                {{#each this}}
-                <li class="topcoat-list__item">
-                    {{@index}}: {{this}}
-                    <button class="topcoat-icon-button--quiet right">
-                    	<div class='topcoat-icon list-icon-right icomatic'>chat</div>
-                    </button>
-                </li>
-                {{/each}}
-            </ol>
-        </div>
-    </script>
+    <!-- Library dependencies -->
+    <script src="lib/zepto.custom.min.js"></script>
+    <script src="lib/handlebars.min-v1.3.0.js"></script>
+    <script src="lib/underscore-min.js"></script>
+    <script src="lib/backbone-min.js"></script>
 
-    <script id="tag-template" type="text/x-handlebars-template">
-        <p>{{ exclamation this }} You scanned <strong style="font-weight:900">{{ decodePayload this }}</strong></p>
-    </script>
-
-    <script id="tag-status-template" type="text/x-handlebars-template">
-        <div class="bubble bubble-info">
-            <div class="bubble-icon topcoat-icon icomatic">checkmark</div>
-            <p>{{ exclamation this }} You scanned <strong style="font-weight:900">{{ decodePayload this }}</strong></p>
-        </div>
-    </script>
-
-    <script id="tag-full-template" type="text/x-handlebars-template">
-        <p>Scanned an NDEF tag with {{ ndefMessage.length }} {{ pluralize ndefMessage.length 'record' 'records' }}</p>
-
-        {{!
-        BB10 and WP8 will not have any meta info
-        Android P2P will not have id, but will have type
-        }}
-        <dl>
-            {{#if id}}
-            <dt>Tag Id</dt>
-            <dd>{{ bytesToHexString id }}</dd>
-            {{/if}}
-
-            {{#if type}}
-            <dt>Tag Type</dt>
-            <dd>{{ type }}</dd>
-            {{/if}}
-
-            {{#if maxSize }}
-            <dt>Max Size</dt>
-            <dd>{{ maxSize }} bytes</dd>
-            {{/if}}
-
-            {{#if freeSpaceSize }}
-            <dt>Free Space</dt>
-            <dd>{{ freeSpaceSize }} bytes</dd>
-            {{/if}}
-
-            {{#if id}}
-            <dt>Is Writable</dt>
-            <dd>{{ toString isWritable }}</dd>
-            <dt>Can Make Read Only</dt>
-            <dd>{{ toString canMakeReadOnly }}</dd>
-            {{/if}}
-        </dl>
-
-        {{#each ndefMessage}}  {{! does not read well, iterating on records non messages}}
-        <div class='record'>
-            Record {{ @index }}:<br />
-            TNF: <b>{{ tnfToString tnf }}</b><br />
-            {{#if tnf}}
-            Record Type: <b>{{ bytesToString type }}</b><br />
-            Payload: <b>{{ decodePayload this }}</b><br />
-            {{#if id}}
-            Record Id: <b>{{ bytesToString id }}</b><br />
-            {{/if}}
-            {{/if}}
-        </div>
-        {{/each}}
-    </script>
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-    <!--    <script type="text/javascript" charset="utf-8" src="phonegap-nfc.js"></script>-->
-    <script type="text/javascript" charset="utf-8" src="js/handlebars.min-v1.3.0.js"></script>
-    <script src="js/zepto.custom.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="js/index.js"></script>
-    <script type="text/javascript">
+    <!-- Application scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/utils/templates.js"></script>
+    <script src="js/routers/AppRouter.js"></script>
+    <script src="js/views/HomeView.js"></script>
+    <script src="js/views/EmployeeView.js"></script>
+    <script>
         app.initialize();
     </script>
 </body>
