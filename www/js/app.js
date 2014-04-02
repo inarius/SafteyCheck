@@ -12,7 +12,8 @@ var app = {
     route: {},
 	scans: [],
 	initialize: function () {
-        //app.clearScreen();
+	    //app.clearScreen();
+	    app.slider = new PageSlider($('body'));
         app.bindDevice();
         app.compileTemplates();
 		app.addTemplateHelpers();
