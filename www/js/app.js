@@ -1,12 +1,24 @@
+var debug = {};
 var app = {
+    views: {},
+    models: {},
+    routers: {},
+    utils: {},
+    adapters: {},
+    user: { 
+        session: null,
+        auth: null
+    },
+    route: {},
 	scans: [],
-    initialize: function () {
+	initialize: function () {
         //app.clearScreen();
-		this.bind();
-		app.compileTemplates();
+        app.bindDevice();
+        app.compileTemplates();
 		app.addTemplateHelpers();
 		//app.showInstructions("Starting. Please wait...");
-    },
+	},
+	eventBus: _.extend({}, Backbone.Events),
 	openMenu: function () {
 		$('#right').animate({ translate3d:'260px,0,0' }, 200);
 		//$('#right').animate({ left: 250 }, 350);
@@ -62,36 +74,9 @@ var app = {
 			headers: headers
 		});
 	},
-    bind: function () {
-        document.addEventListener('deviceready', this.deviceready, false);
-
-		$("#loginForm").submit(function(e) {
-			e.preventDefault();
-			console.log("Submitting: " + $(this).serialize() + " to: " + $(this).attr('action'));
-		    $.ajax({
-		           type: $(this).attr('method'),
-		           url: $(this).attr('action'),
-		           data: $(this).serialize(), // serializes the form's elements.
-		           success: function(data) {
-					console.log("success!");
-		             $('#loginError').removeClass("appear");
-					console.log(data);
-		             app.setAccessToken(data.access_token);
-					console.log("Stored access token: " + data.access_token);
-		             app.loginSucceeded();
-		           },
-		           error: function(data) {
-					console.log("Login failed!");
-					 var rtn = eval("(" + data.responseText + ")");
-		             $('#loginError').html("<div class='topcoat-icon inline-icon icomatic'>error</div>" + rtn.error_description);
-		             $('#loginError').addClass("appear");
-		             // TODO: blink??
-				   }
-		         });
-		});
-        $('#side-menu-button.off').on('click', app.openMenu);
-        $('#side-menu-button.on').on('click', app.closeMenu);
-    },
+	bindDevice: function () {
+	    document.addEventListener('deviceready', this.deviceready, false);
+	},
     deviceready: function () {
         document.addEventListener("menubutton", app.openMenu, false);
         function failure(reason) {
@@ -125,7 +110,9 @@ var app = {
         app.runLogic();
     },
     onNdef: function (nfcEvent) {
-        console.log(JSON.stringify(nfcEvent.tag));
+        debug.nfcEvent = nfcEvent;
+        console.log("debug.nfcEvent stored");
+        console.log("encoded nfcEvent.tag: " + JSON.stringify(nfcEvent.tag));
         var tag = nfcEvent.tag;
         // BB7 has different names, copy to Android names
         if (tag.serialNumber) {
@@ -133,13 +120,32 @@ var app = {
             tag.isWritable = !tag.isLocked;
             tag.canMakeReadOnly = tag.isLockable;
         }
-        console.log('scanned: ' + decodePayload(tag.ndefMessage[0]));
+        tag = decodeTag(tag);
+        console.log("decoded nfcEvent.tag: " + JSON.stringify(tag));
+        for (var i = 0; i < tag.ndefMessage.length; i++) {
+            switch (tag.ndefMessage[i].type) {
+                case "application/prismuser":
+                    app.onNfcPrismUser(nfcEvent, i);
+                case "application/location":
+                    aoo.onNfcLocation(nfcEvent, i);
+            }
+        }
+
         app.scans[app.scans.length] = decodePayload(tag.ndefMessage[0]);
         console.log('new scan history: ' + JSON.stringify(app.scans));
         tagContents.innerHTML = app.tagStatusTemplate(tag) + app.tagListTemplate(app.scans);
         navigator.notification.vibrate(100);
         app.hideInstructions();
         app.runLogic();
+    },
+    onNfcPrismUser: function(nfcEvent, ndefIndex) {
+        //TODO: (precondition) alter default page (ask to scan tag)
+        alert("User scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
+        //TODO: Load login page with user and otp prefilled (hidden) - prompt for pass and route buttons
+        //TODO? harcode route buttons?
+    },
+    onNfcLocation: function (nfcEvent, ndefIndex) {
+        alert("Location scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
     },
     clearScreen: function () {
         tagContents.innerHTML = "";
@@ -149,7 +155,7 @@ var app = {
         console.log("showing instructions text: " + text);
         $('.hidden').remove();
         $('.instructions').remove();
-        messageContents.innerHTML += app.instructionsTemplate(text);
+        messageContents.innerHTML += app.views.InstructionsDivView(text).render().$el.html();
         var hidden = document.getElementsByClassName('hidden');
         if (hidden && hidden.length) {
             hidden[0].className = 'instructions';
@@ -180,15 +186,22 @@ var app = {
         }
     },
     compileTemplates: function () {
-        var template;
-        template = document.getElementById('instructions-template').innerHTML;
-        app.instructionsTemplate = Handlebars.compile(template);
-        template = document.getElementById('tag-template').innerHTML;
-        app.tagTemplate = Handlebars.compile(template);
-        template = document.getElementById('tag-list-template').innerHTML;
-        app.tagListTemplate = Handlebars.compile(template);
-        template = document.getElementById('tag-status-template').innerHTML;
-        app.tagStatusTemplate = Handlebars.compile(template);
+        app.router = new app.routers.AppRouter();
+        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView"],
+            function () {
+                app.router = new app.routers.AppRouter();
+                Backbone.history.start();
+            });
+
+        //template = Handlebars.getTemplate("InstructionsDivView");
+        //app.instructionsTemplate = Handlebars.compile(template);
+
+        //template = document.getElementById('tag-template').innerHTML;
+        //app.tagTemplate = Handlebars.compile(template);
+        //template = document.getElementById('tag-list-template').innerHTML;
+        //app.tagListTemplate = Handlebars.compile(template);
+        //template = document.getElementById('tag-status-template').innerHTML;
+        //app.tagStatusTemplate = Handlebars.compile(template);
     },
     addTemplateHelpers: function () {
         Handlebars.registerHelper('bytesToString', function(byteArray) {
@@ -223,6 +236,32 @@ var app = {
         });
     }
 };
+
+// ideally some form of this can move to phonegap-nfc util
+function decodeTag(tag) {
+    if (typeof tag.ndefMessage != 'undefined') {
+        console.log("Record has ndef message(s).");
+        for (var i = 0; i < tag.ndefMessage.length; i++) {
+            tag.ndefMessage[i] = decodeNdef(tag.ndefMessage[i]);
+        }
+    }
+    return tag;
+}
+function decodeNdef(ndef) {
+    console.log("decoding ndef: " + JSON.stringify(ndef));
+    if (typeof ndef.ndefMessage != 'undefined') {
+        console.log("Record has ndef message(s).");
+        ndef = ndef.ndefMessage[0];
+    }
+    if (typeof ndef.type != 'undefined') {
+        ndef.type = nfc.bytesToString(ndef.type);
+        ndef.payload = nfc.bytesToString(ndef.payload);
+    }
+    else {
+        console.log("Record doesn't have ndef message.");
+    }
+    return ndef;
+}
 
 // ideally some form of this can move to phonegap-nfc util
 function decodePayload(record) {

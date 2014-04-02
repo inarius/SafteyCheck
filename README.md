@@ -16,6 +16,14 @@ Then, in a browser navigate to:
 
 http://localhost:8081/
 
+To debug using weinre, run:
+
+> weinre --boundHost -all-
+
+Then use the console located at:
+
+http://localhost:8080/client/#nfc
+
 
 How to package and run
 ======================
@@ -37,6 +45,8 @@ These files (only) must be included in the PhoenGap Build package:
 + \www\css\*
 + \www\font\*
 + \www\js\*
++ \www\lib\*
++ \www\views\*
 + \www\index.html
 + \www\config.xml
 

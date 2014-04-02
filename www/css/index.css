@@ -162,6 +162,12 @@ div.record {
   border: 1px solid #333434;
   box-shadow: inset 0 1px #737373;
 }
+.topcoat-navigation-bar__item #finish-button {
+    position: absolute;
+    top: .5em;
+    right: 0;
+    padding: 0 .75rem;
+}
 .topcoat-navigation-bar__item #side-menu-button {
     position: absolute;
     top: .5em;
@@ -181,6 +187,9 @@ div.record {
 }
 .left {
     float:left;
+}
+.right {
+    float:right;
 }
 
 /* Slide menu */
