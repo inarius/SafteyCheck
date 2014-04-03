@@ -9,12 +9,14 @@ app.routers.AppRouter = Backbone.Router.extend({
     },
 
     initialize: function () {
+        // Doing this here seems to break things?
         //app.initialize();
     },
 
     home: function () {
-        // Since the home view never changes, we instantiate it and render it only once
         console.log("we're home!");
+
+        // The following ("home-route") views never change, so we instantiate and render them only once
         if (!app.homeView) {
             app.homeView = new app.views.HomeView();
             app.homeView.render();
@@ -22,8 +24,16 @@ app.routers.AppRouter = Backbone.Router.extend({
             console.log('reusing home view');
             app.homeView.delegateEvents(); // delegate events when the view is recycled
         }
-        //app.slider.slidePage(app.homeView.$el);
-        $('body').append(app.homeView.el);
+        if (!app.loginView) {
+            app.loginView = new app.views.LoginView();
+            app.loginView.render(); //TODO? Should we render the login view just because we visit home?
+        } else {
+            console.log('reusing login view');
+            app.loginView.delegateEvents(); // delegate events when the view is recycled
+        }
+
+        // show the home view
+        app.slider.slidePage(app.homeView.$el);
     },
 
     employeeDetails: function (id) {

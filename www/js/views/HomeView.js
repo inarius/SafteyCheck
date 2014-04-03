@@ -2,12 +2,9 @@ app.views.HomeView = Backbone.View.extend({
 
     initialize: function () {
         //TODO: consider splitting most content into separate pages, except small or reusable blocks (like rows or dialogs...)
+        //TODO: don't forget app.homeView and app.loginView are both global also!... and prerendered!
 
-        //this.searchResults = new app.models.EmployeeCollection();
-        this.loginView = new app.views.LoginView();
-        
         //global events
-        //TODO: don't forget app.homeView is global also...!
         _.bindAll(this, 'showLogin'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         app.eventBus.on("showLogin:home", this.showLogin); // call to execute: App.eventBus.trigger("showLogin:home");
     },
@@ -35,8 +32,7 @@ app.views.HomeView = Backbone.View.extend({
     },
 
     showLogin: function() {
-        //$('#content', this.el).html(this.loginView.render().el);
-        app.slider.slidePage(this.loginView.render().el);
+        app.slider.slidePage(app.loginView.$el);
     },
     onkeypress: function (event) {
         if (event.keyCode === 13) { // enter key pressed
