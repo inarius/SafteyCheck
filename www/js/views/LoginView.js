@@ -27,6 +27,19 @@ app.views.LoginView = Backbone.View.extend({
         //"keypress .search-key": "onkeypress"
     },
 
+    animate: function() {
+        (function () {
+            $('#login svg', this.el).hide();
+            var imgs = document.getElementById('login').getElementsByTagName('svg'),
+                index = 0;
+            imgs[0].style.display = 'block';
+            setInterval(function () {
+                imgs[index].style.display = 'none';
+                index = (index + 1) % imgs.length;
+                imgs[index].style.display = 'block';
+            }, 800);
+        }());
+    },
     showLoginForm: function () {
         $('#login', this.el).html(this.loginFormView.render().el);
     },
