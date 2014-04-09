@@ -9,6 +9,7 @@ var app = {
         session: null,
         auth: null
     },
+    currentPage: null,
     route: {},
 	scans: [],
 	initialize: function () {
@@ -126,9 +127,14 @@ var app = {
         for (var i = 0; i < tag.ndefMessage.length; i++) {
             switch (tag.ndefMessage[i].type) {
                 case "application/prismuser":
-                    app.onNfcPrismUser(nfcEvent, i);
+                    // calling eventBus with payload: http://stackoverflow.com/questions/16874252/should-i-use-a-central-event-bus-with-backbone-js
+                    if (app.currentPage == "login")
+                        app.eventBus.trigger("onNfcPrismUser:login", nfcEvent, i);
+                    // otherwise ignore the scan
+                    break;
                 case "application/location":
-                    aoo.onNfcLocation(nfcEvent, i);
+                    app.onNfcLocation(nfcEvent, i);
+                    break;
             }
         }
 
@@ -138,12 +144,6 @@ var app = {
         navigator.notification.vibrate(100);
         app.hideInstructions();
         app.runLogic();
-    },
-    onNfcPrismUser: function(nfcEvent, ndefIndex) {
-        //TODO: (precondition) alter default page (ask to scan tag)
-        alert("User scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
-        //TODO: Load login page with user and otp prefilled (hidden) - prompt for pass and route buttons
-        //TODO? harcode route buttons?
     },
     onNfcLocation: function (nfcEvent, ndefIndex) {
         alert("Location scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));

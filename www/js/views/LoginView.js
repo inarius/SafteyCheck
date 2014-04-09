@@ -7,7 +7,9 @@ app.views.LoginView = Backbone.View.extend({
 
         //global events
         _.bindAll(this, 'showLoginForm'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
+        _.bindAll(this, 'onNfcPrismUser'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         app.eventBus.on("showLoginForm:login", this.showLoginForm); // call to execute: app.eventBus.trigger("showLoginForm:login");
+        app.eventBus.on("onNfcPrismUser:login", this.onNfcPrismUser); // call to execute: app.eventBus.trigger("onNfcPrismUser:login");
     },
 
     render: function () {
@@ -25,6 +27,8 @@ app.views.LoginView = Backbone.View.extend({
     events: { //local events
         //"keyup .search-key":    "search",
         //"keypress .search-key": "onkeypress"
+        // TODO? how to do nfc here? EventBus? 
+        // TODO? Perhaps a global function could consider app state and call eventBus.on with the proper :context?
     },
 
     animate: function() {
@@ -40,6 +44,12 @@ app.views.LoginView = Backbone.View.extend({
     },
     showLoginForm: function () {
         $('#login', this.el).html(this.loginFormView.render().el);
+    },
+    onNfcPrismUser: function (nfcEvent, ndefIndex) {
+        //TODO: (precondition) alter default page (ask to scan tag)
+        alert("User scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
+        //TODO: Load login page with user and otp prefilled (hidden) - prompt for pass and route buttons
+        //TODO? harcode route buttons?
     },
     onkeypress: function (event) {
         if (event.keyCode === 13) { // enter key pressed
