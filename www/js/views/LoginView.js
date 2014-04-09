@@ -32,8 +32,8 @@ app.views.LoginView = Backbone.View.extend({
     },
 
     animate: function() {
-        $('#login svg', this.el).hide();
-        var imgs = $('#login svg', this.el),
+        $('#scan-animation svg', this.el).hide();
+        var imgs = $('#scan-animation svg', this.el),
             index = 0;
         imgs[0].style.display = 'block';
         setInterval(function () {
@@ -46,7 +46,7 @@ app.views.LoginView = Backbone.View.extend({
         $('#login', this.el).html(this.loginFormView.render().el);
     },
     onNfcPrismUser: function (nfcEvent, ndefIndex) {
-        //TODO: (precondition) alter default page (ask to scan tag)
+        // (precondition) we are here because the nfcEvent was a scan of type "application/prismuser"
         alert("User scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
         //TODO: Load login page with user and otp prefilled (hidden) - prompt for pass and route buttons
         //TODO? harcode route buttons?

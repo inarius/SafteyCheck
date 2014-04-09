@@ -1,11 +1,11 @@
-<div id="right">
+<div id="right" class="login-page">
     <header class="topcoat-navigation-bar">
         <div class="topcoat-navigation-bar__item center full">
             <h1 class="topcoat-navigation-bar__title">Scan badge to login</h1>
         </div>
     </header>
     <div id="content">
-        <div id="login" style="height:400px">
+        <div id="scan-animation" style="height:380px"><!-- // TODO: make height adjust from screen size or CSS media queries (calc?) -->
             <svg id="frame1" viewBox="80 0 232 500" xmlns="http://www.w3.org/2000/svg">
                 <g>
                     <g id="svg_10" fill="currentColor">
@@ -82,5 +82,6 @@
                 app.loginView.animate();
             </script>
         </div>
+        <p>Or, <a href="#manualLogin">login manually</a></p>
     </div>
 </div>

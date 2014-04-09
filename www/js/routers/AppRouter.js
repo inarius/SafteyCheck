@@ -2,6 +2,7 @@ app.routers.AppRouter = Backbone.Router.extend({
     routes: {
         "":                         "home",
         "login":                    "login", // TODO? how can I use this?
+        "manualLogin":              "manualLogin",
         "employees/:id":            "employeeDetails",
         "employees/:id/reports":    "reports"/*,
         "employees/:id/map":        "map"
@@ -20,7 +21,7 @@ app.routers.AppRouter = Backbone.Router.extend({
         app.currentPage = "home";
         console.log("current page: " + app.currentPage);
 
-        // The following ("home-route") views never change, so we instantiate and render them only once
+        // The home view never changes, so we instantiate and render it only once
         if (!app.homeView) {
             app.homeView = new app.views.HomeView();
             app.homeView.render();
@@ -28,20 +29,12 @@ app.routers.AppRouter = Backbone.Router.extend({
             console.log('reusing home view');
             app.homeView.delegateEvents(); // delegate events when the view is recycled
         }
-        if (!app.loginView) {
-            app.loginView = new app.views.LoginView();
-            app.loginView.render(); //TODO? Should we render the login view just because we visit home?
-        } else {
-            console.log('reusing login view');
-            app.loginView.delegateEvents(); // delegate events when the view is recycled
-        }
 
         if (app.user.auth == null) {
-            // show the login view
-            // TODO? call a login() method and have the page initiate actions or make the page dumb and do actions here?
-            this.login();
+            // goto login
+            window.location = "#login";
         } else {
-            // show the home view
+            // load the home view
             app.slider.slidePage(app.homeView.$el);
         }
     },
@@ -54,7 +47,25 @@ app.routers.AppRouter = Backbone.Router.extend({
         app.user.auth = null;
         app.user.session = null;
 
+        // The login view never changes, so we instantiate and render it only once
+        if (!app.loginView) {
+            app.loginView = new app.views.LoginView();
+            app.loginView.render(); //TODO? Should we render the login view just because we visit home?
+        } else {
+            console.log('reusing login view');
+            app.loginView.delegateEvents(); // delegate events when the view is recycled
+        }
+
+        // load the login view
         app.slider.slidePage(app.loginView.$el);
+    },
+
+    manualLogin: function () {
+        app.currentPage = "manualLogin";
+        console.log("current page: " + app.currentPage);
+
+        alert('manualLogin not implemented');
+        window.location = "#login";
     },
 
     employeeDetails: function (id) {

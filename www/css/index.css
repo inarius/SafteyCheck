@@ -3,6 +3,9 @@ body {
   padding: 0;
   color: #F0F1F1;
 }
+a {
+    color: #cccdce;
+}
 
 .instructions {
   /*padding: 40px 10px 20px 10px;*/
@@ -96,15 +99,15 @@ div.record {
     left:15%;
     top:62px;
 }
-#login {
+.login-page #content {
 	margin:auto;
 	margin-top:2em;
 	width:80%;
 }
-#login input {
+.login-page #content input {
 	width:100%;
 }
-#login button {
+.login-page #content button {
 	display:block;
 	margin:auto;
 	width:100%;
@@ -191,8 +194,11 @@ div.record {
 .right {
     float:right;
 }
-#login > svg {
+.login-page #scan-animation > svg {
     margin:auto;
+}
+.login-page #content {
+    text-align:center;
 }
 
 /* Slide menu */

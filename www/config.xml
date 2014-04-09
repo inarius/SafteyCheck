@@ -16,6 +16,8 @@
         VCPA
     </author>
 
+  <content src="start.html" />
+  
 	<gap:plugin name="com.simplec.plugins.localnotification" />
 	<gap:plugin name="com.chariotsolutions.nfc.plugin" />
 	<!--<gap:plugin name="org.apache.cordova.core.vibration" />-->
