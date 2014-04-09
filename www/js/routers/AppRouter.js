@@ -32,8 +32,13 @@ app.routers.AppRouter = Backbone.Router.extend({
             app.loginView.delegateEvents(); // delegate events when the view is recycled
         }
 
-        // show the home view
-        app.slider.slidePage(app.homeView.$el);
+        if (app.user.auth == null) {
+            // show the login view
+            app.slider.slidePage(app.loginView.$el);
+        } else {
+            // show the home view
+            app.slider.slidePage(app.homeView.$el);
+        }
     },
 
     employeeDetails: function (id) {
