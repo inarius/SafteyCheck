@@ -200,6 +200,17 @@ div.record {
 .login-page #content {
     text-align:center;
 }
+.login-page #loginForm * {
+    position:relative;
+}
+.login-page #loginForm #submit-buttons {
+    min-height:100px;
+}
+.login-page #loginForm .spinner {
+    position:absolute;
+    top:50%;
+    left:50%;
+}
 
 /* Slide menu */
 

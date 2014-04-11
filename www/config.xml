@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
-<widget xmlns     = "http://www.w3.org/ns/widgets"
-        xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "com.phonegap.vcpa-nfc-reader"
-        version   = "1.1.15">
+<widget xmlns         = "http://www.w3.org/ns/widgets"
+        xmlns:gap     = "http://phonegap.com/ns/1.0"
+        xmlns:android = "http://schemas.android.com/apk/res/android"
+        id            = "com.phonegap.vcpa-nfc-reader"
+        version       = "1.1.15">
 
     <name>*NFCReader</name>
 
@@ -17,7 +18,10 @@
     </author>
 
   <content src="start.html" />
-  
+
+  <gap:config-file platform="android" parent="/manifest/application">
+    <activity android:launchMode="singleTask" />
+  </gap:config-file>
 	<gap:plugin name="com.simplec.plugins.localnotification" />
 	<gap:plugin name="com.chariotsolutions.nfc.plugin" />
 	<!--<gap:plugin name="org.apache.cordova.core.vibration" />-->
@@ -65,7 +69,8 @@
     <preference name="disable-cursor"             value="false" />          <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="android-minSdkVersion"      value="7" />              <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
-
+    <preference name="android-launchMode"         value="singleTask" />
+  
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
     <icon src="res/icon/android/icon-36-ldpi.png"   gap:platform="android"    gap:density="ldpi" />

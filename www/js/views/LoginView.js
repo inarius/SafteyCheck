@@ -4,6 +4,7 @@ app.views.LoginView = Backbone.View.extend({
         //TODO: consider splitting most content into separate pages, except small or reusable blocks (like rows or dialogs...)
         // local views
         this.loginFormView = new app.views.LoginFormView();
+        this.loginFormView.parent = this;
 
         //global events
         _.bindAll(this, 'showLoginForm'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
@@ -42,13 +43,18 @@ app.views.LoginView = Backbone.View.extend({
             imgs[index].style.display = 'block';
         }, 800);
     },
-    showLoginForm: function () {
-        $('#login', this.el).html(this.loginFormView.render().el);
+    showLoginForm: function (user) {
+        $('.login-page #content', this.el).html(this.loginFormView.render().el);
+        $('h1').text("Please enter your password");
+        $('#loginForm h2').append(" as " + user);
     },
     onNfcPrismUser: function (nfcEvent, ndefIndex) {
+        // TODO: (precondition) request the roundType list (async - how to handle this?)
+            // TODO? when can we render the loginform? can that be the impetus for the ajax call?
         // (precondition) we are here because the nfcEvent was a scan of type "application/prismuser"
-        alert("User scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
         //TODO: Load login page with user and otp prefilled (hidden) - prompt for pass and route buttons
+        var payload = JSON.parse(nfcEvent.tag.ndefMessage[ndefIndex].payload);
+        app.eventBus.trigger("showLoginForm:login", payload.login);
         //TODO? harcode route buttons?
     },
     onkeypress: function (event) {

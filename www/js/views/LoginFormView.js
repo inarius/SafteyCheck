@@ -36,6 +36,53 @@ app.views.LoginFormView = Backbone.View.extend({
                 }
             });
         });
+        $("#loginForm input[name='password']", this.el).focus();
+        //var opts = {
+        //    lines: 50, // The number of lines to draw
+        //    length: 1, // The length of each line
+        //    width: 3, // The line thickness
+        //    radius: 8, // The radius of the inner circle
+        //    corners: 0, // Corner roundness (0..1)
+        //    rotate: 0, // The rotation offset
+        //    direction: 1, // 1: clockwise, -1: counterclockwise
+        //    speed: .7, // Rounds per second
+        //    trail: 90, // Afterglow percentage
+        //    hwaccel: true, // Whether to use hardware acceleration
+        //    opacity: '0.03',
+        //    color: this.parent.$el.css('color')
+        //};
+        //var opts = {
+        //    lines: 100, // The number of lines to draw
+        //    length: 3, // The length of each line
+        //    width: 1, // The line thickness
+        //    radius: 10, // The radius of the inner circle
+        //    corners: 0, // Corner roundness (0..1)
+        //    rotate: 0, // The rotation offset
+        //    direction: 1, // 1: clockwise, -1: counterclockwise
+        //    speed: .7, // Rounds per second
+        //    trail: 90, // Afterglow percentage
+        //    hwaccel: true, // Whether to use hardware acceleration
+        //    opacity: '0.03',
+        //    color: this.parent.$el.css('color')
+        //};
+        //TODO: width, radius, and lines can vary when altering the size
+        var opts = {
+            lines: 50, // The number of lines to draw
+            length: 1, // The length of each line
+            width: 3, // The line thickness
+            radius: 5, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            speed: .7, // Rounds per second
+            trail: 90, // Afterglow percentage
+            hwaccel: true, // Whether to use hardware acceleration
+            opacity: '0.03',
+            color: this.parent.$el.css('color')
+        };
+        var spinner = new Spinner(opts).spin();
+        $('#submit-buttons', this.el).append(spinner.el);
+        $('input[name="password"]', this.el).focus();
     },
 
     events: { //local events

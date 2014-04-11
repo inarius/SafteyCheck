@@ -1,4 +1,23 @@
 var debug = {};
+debug.sampleNfcEvent = {
+    tag: {
+        isWritable: true,
+        id: [4, -87, 16, -14, 69, 43, -128],
+        techTypes: [
+            "android.nfc.tech.MifareUltralight",
+            "android.nfc.tech.NfcA",
+            "android.nfc.tech.Ndef"],
+        type: "NFC Forum Type 2",
+        canMakeReadOnly: true,
+        maxSize: 137,
+        ndefMessage: [{
+            id: [],
+            type: "application/prismuser",
+            payload: '{"tag":1,"login":"simonej","otp":"DGUuUj+R1loUQbLRt/OPyE52lYMM"}',
+            tnf: 2
+        }]
+    }
+};
 var app = {
     views: {},
     models: {},
@@ -127,10 +146,16 @@ var app = {
         for (var i = 0; i < tag.ndefMessage.length; i++) {
             switch (tag.ndefMessage[i].type) {
                 case "application/prismuser":
-                    // calling eventBus with payload: http://stackoverflow.com/questions/16874252/should-i-use-a-central-event-bus-with-backbone-js
-                    if (app.currentPage == "login")
+                    console.log("PRISM user tag scanned");
+                    if (app.currentPage == "login") {
+                        // calling eventBus with payload: http://stackoverflow.com/questions/16874252/should-i-use-a-central-event-bus-with-backbone-js
+                        console.log("Triggering login scan process");
                         app.eventBus.trigger("onNfcPrismUser:login", nfcEvent, i);
-                    // otherwise ignore the scan
+                    }
+                    else {
+                        // otherwise ignore the scan
+                        console.log("Not on login page -- scan ignored");
+                    }
                     break;
                 case "application/location":
                     app.onNfcLocation(nfcEvent, i);
