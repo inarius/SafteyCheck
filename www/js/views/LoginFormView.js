@@ -41,12 +41,13 @@ app.views.LoginFormView = Backbone.View.extend({
     },
 
     bindDOM: function () {
+        var self = this;
         $('#loginForm', this.el).submit(function (e) {
             e.preventDefault();
             console.log("Submitting: " + $(this).serialize() + " to: " + $(this).attr('action'));
             $.ajax({
                 type: $(this).attr('method'),
-                url: $(this).attr('action'),
+                url: app.config.api_url + "Token",
                 data: $(this).serialize(), // serializes the form's elements.
                 success: function (data) {
                     console.log("success!");
@@ -54,7 +55,7 @@ app.views.LoginFormView = Backbone.View.extend({
                     console.log(data);
                     app.setAccessToken(data.access_token);
                     console.log("Stored access token: " + data.access_token);
-                    app.loginSucceeded();
+                    self.loginSucceeded();
                 },
                 error: function (data) {
                     console.log("Login failed!");
@@ -81,6 +82,17 @@ app.views.LoginFormView = Backbone.View.extend({
         if (event.keyCode === 13) { // enter key pressed
             event.preventDefault();
         }
+    },
+
+    loginSucceeded: function () {
+        console.log("Login sucessful");
+        var userInfoPromise = app.getUserInfo();
+        userInfoPromise.done(function (data) {
+            app.user.auth = data;
+            console.log("Logged in as: " + data.userName);
+            alert(data.userName);
+            window.location = "#home";
+        });
     }
 
 });

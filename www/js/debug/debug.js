@@ -21,7 +21,7 @@ debug.sampleNfcEvent = {
         ndefMessage: [{
             id: [],
             type: "application/prismuser",
-            payload: '{"tag":1,"login":"simonej","otp":"DGUuUj+R1loUQbLRt/OPyE52lYMM"}',
+            payload: '{"tag":1,"login":"simonej","otp":"0123456789"}',
             tnf: 2
         }]
     }

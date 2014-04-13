@@ -12,7 +12,10 @@ var app = {
         auth: null
     },
     currentPage: null,
-    route: {},
+    round: {
+        type: {},
+        locations: {}
+    },
 	scans: [],
 	initialize: function () {
 	    //app.clearScreen();
@@ -58,15 +61,6 @@ var app = {
 			return { "Authorization": "Bearer " + accessToken };
 		}
 		return {};
-	},
-	loginSucceeded: function () {
-		console.log("Login sucessful");
-		$("#loginForm").hide();
-		var userInfoPromise = app.getUserInfo();
-		userInfoPromise.done(function (data) {
-			console.log("Logged in as: " + data.userName);
-			alert(data.userName);
-		});
 	},
 	getUserInfo: function () {
 		console.log("Getting user data");
