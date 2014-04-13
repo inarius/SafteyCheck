@@ -87,21 +87,20 @@ app.views.LoginFormView = Backbone.View.extend({
 
 app.views.RoundTypeButtonView = Backbone.View.extend({
 
-    // TODO? use setElement() instead?
-    tagName: "button",
-    className: "topcoat-button--cta",
-    attributes: {
-        type: "submit"
-    },
+    //tagName: "button",
+    //className: "topcoat-button--cta",
+    //attributes: {
+    //    type: "submit"
+    //},
 
     initialize: function () {
-        //this.model.on("change", this.render, this);
-        //this.model.on("destroy", this.close, this);
+        this.model.on("change", this.render, this);
+        this.model.on("destroy", this.close, this);
     },
 
     render: function () {
-        this.$el.html(this.template({ model: this.model.toJSON() }));
-        //this.$el.html(this.template({ model: this.model.attributes }));
+        // setElement() overrides the default this.el div element
+        this.setElement(this.template({ model: this.model.attributes }));
         return this;
     }
 
