@@ -1,11 +1,6 @@
 app.views.LoginView = Backbone.View.extend({
 
     initialize: function () {
-        //TODO: consider splitting most content into separate pages, except small or reusable blocks (like rows or dialogs...)
-        // local views
-        this.loginFormView = new app.views.LoginFormView();
-        this.loginFormView.parent = this;
-
         //global events
         _.bindAll(this, 'showLoginForm'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         _.bindAll(this, 'onNfcPrismUser'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
@@ -43,18 +38,37 @@ app.views.LoginView = Backbone.View.extend({
             imgs[index].style.display = 'block';
         }, 800);
     },
-    showLoginForm: function (user) {
+    showLoginForm: function (userTagMessage) {
+        // test with: app.eventBus.trigger("onNfcPrismUser:login",debug.sampleNfcEvent,0);
+
+        // begin grabbing the roundTypes model data
+        var rounds = new app.models.RoundTypeCollection();
+        rounds.fetch({ 
+            error: function () {
+                // TODO: error handling
+                console.log("roundTypes API call failed"); 
+            }
+        });
+
+        this.loginFormView = new app.views.LoginFormView({ model: rounds });
+        this.loginFormView.parent = this;
         $('.login-page #content', this.el).html(this.loginFormView.render().el);
         $('h1').text("Please enter your password");
-        $('#loginForm h2').append(" as " + user);
+        $('#loginForm h2').append(" as " + userTagMessage.login);
+        //pre-fill input fields
+        $("#loginForm input[name='username']", this.el).val(userTagMessage.login);
+        $("#loginForm input[name='one_time_password']", this.el).val(userTagMessage.otp);
     },
     onNfcPrismUser: function (nfcEvent, ndefIndex) {
+        // TODO: (eventually) should validate the user tag separately (first) for smoother multi-factor auth
+        // TODO? do it twice? read-only to progress to login, then write back new otp with password?
+
         // TODO: (precondition) request the roundType list (async - how to handle this?)
             // TODO? when can we render the loginform? can that be the impetus for the ajax call?
         // (precondition) we are here because the nfcEvent was a scan of type "application/prismuser"
         //TODO: Load login page with user and otp prefilled (hidden) - prompt for pass and route buttons
         var payload = JSON.parse(nfcEvent.tag.ndefMessage[ndefIndex].payload);
-        app.eventBus.trigger("showLoginForm:login", payload.login);
+        app.eventBus.trigger("showLoginForm:login", payload);
         //TODO? harcode route buttons?
     },
     onkeypress: function (event) {

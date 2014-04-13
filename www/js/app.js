@@ -1,24 +1,7 @@
-var debug = {};
-debug.sampleNfcEvent = {
-    tag: {
-        isWritable: true,
-        id: [4, -87, 16, -14, 69, 43, -128],
-        techTypes: [
-            "android.nfc.tech.MifareUltralight",
-            "android.nfc.tech.NfcA",
-            "android.nfc.tech.Ndef"],
-        type: "NFC Forum Type 2",
-        canMakeReadOnly: true,
-        maxSize: 137,
-        ndefMessage: [{
-            id: [],
-            type: "application/prismuser",
-            payload: '{"tag":1,"login":"simonej","otp":"DGUuUj+R1loUQbLRt/OPyE52lYMM"}',
-            tnf: 2
-        }]
-    }
-};
 var app = {
+    config: {
+        api_url: "http://169.231.51.222:58914/"
+    },
     views: {},
     models: {},
     routers: {},
@@ -213,7 +196,7 @@ var app = {
     },
     compileTemplates: function () {
         app.router = new app.routers.AppRouter();
-        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView"],
+        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView", "RoundTypeButtonView"],
             function () {
                 app.router = new app.routers.AppRouter();
                 Backbone.history.start();

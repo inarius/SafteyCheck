@@ -1,11 +1,42 @@
 app.views.LoginFormView = Backbone.View.extend({
 
     initialize: function () {
+        var self = this;
+        this.model.on("reset", this.render, this);
+        this.model.on("add", function (roundType) {
+            if (self.spinner)
+                self.spinner.spin(false);
+            $('#submit-buttons', self.el).append(new app.views.RoundTypeButtonView({ model: roundType }).render().el);
+        });
     },
 
     render: function () {
+        this.$el.empty();
         this.$el.html(this.template());
+
+        //TODO: to alter spinner size: vary the width, radius, and lines
+        var opts = {
+            lines: 50, // The number of lines to draw
+            length: 1, // The length of each line
+            width: 3, // The line thickness
+            radius: 5, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            speed: .7, // Rounds per second
+            trail: 90, // Afterglow percentage
+            hwaccel: true, // Whether to use hardware acceleration
+            opacity: '0.03',
+            color: app.loginView.$el.css('color')
+        };
+        this.spinner = new Spinner(opts).spin();
+
         this.bindDOM();
+        var self = this;
+        _.each(this.model.models, function (roundType) {
+            self.spinner.spin(false);
+            $('#submit-buttons', self.el).append(new app.views.RoundTypeButtonView({ model: roundType }).render().el);
+        }, this);
         return this;
     },
 
@@ -36,53 +67,9 @@ app.views.LoginFormView = Backbone.View.extend({
                 }
             });
         });
+        this.spinner.spin();
+        $('#submit-buttons', this.el).append(this.spinner.el);
         $("#loginForm input[name='password']", this.el).focus();
-        //var opts = {
-        //    lines: 50, // The number of lines to draw
-        //    length: 1, // The length of each line
-        //    width: 3, // The line thickness
-        //    radius: 8, // The radius of the inner circle
-        //    corners: 0, // Corner roundness (0..1)
-        //    rotate: 0, // The rotation offset
-        //    direction: 1, // 1: clockwise, -1: counterclockwise
-        //    speed: .7, // Rounds per second
-        //    trail: 90, // Afterglow percentage
-        //    hwaccel: true, // Whether to use hardware acceleration
-        //    opacity: '0.03',
-        //    color: this.parent.$el.css('color')
-        //};
-        //var opts = {
-        //    lines: 100, // The number of lines to draw
-        //    length: 3, // The length of each line
-        //    width: 1, // The line thickness
-        //    radius: 10, // The radius of the inner circle
-        //    corners: 0, // Corner roundness (0..1)
-        //    rotate: 0, // The rotation offset
-        //    direction: 1, // 1: clockwise, -1: counterclockwise
-        //    speed: .7, // Rounds per second
-        //    trail: 90, // Afterglow percentage
-        //    hwaccel: true, // Whether to use hardware acceleration
-        //    opacity: '0.03',
-        //    color: this.parent.$el.css('color')
-        //};
-        //TODO: width, radius, and lines can vary when altering the size
-        var opts = {
-            lines: 50, // The number of lines to draw
-            length: 1, // The length of each line
-            width: 3, // The line thickness
-            radius: 5, // The radius of the inner circle
-            corners: 1, // Corner roundness (0..1)
-            rotate: 0, // The rotation offset
-            direction: 1, // 1: clockwise, -1: counterclockwise
-            speed: .7, // Rounds per second
-            trail: 90, // Afterglow percentage
-            hwaccel: true, // Whether to use hardware acceleration
-            opacity: '0.03',
-            color: this.parent.$el.css('color')
-        };
-        var spinner = new Spinner(opts).spin();
-        $('#submit-buttons', this.el).append(spinner.el);
-        $('input[name="password"]', this.el).focus();
     },
 
     events: { //local events
@@ -94,6 +81,28 @@ app.views.LoginFormView = Backbone.View.extend({
         if (event.keyCode === 13) { // enter key pressed
             event.preventDefault();
         }
+    }
+
+});
+
+app.views.RoundTypeButtonView = Backbone.View.extend({
+
+    // TODO? use setElement() instead?
+    tagName: "button",
+    className: "topcoat-button--cta",
+    attributes: {
+        type: "submit"
+    },
+
+    initialize: function () {
+        //this.model.on("change", this.render, this);
+        //this.model.on("destroy", this.close, this);
+    },
+
+    render: function () {
+        this.$el.html(this.template({ model: this.model.toJSON() }));
+        //this.$el.html(this.template({ model: this.model.attributes }));
+        return this;
     }
 
 });
