@@ -3,7 +3,7 @@ app.models.LocationCategory = Backbone.Model.extend({
     initialize: function () {
         this.uri = app.config.api_url + 'api/locationCategory/' + this.id;
         this.allLocations = new app.models.LocationCollection({}, {parent: this});
-        this.checkedLocations = new app.models.LocationCollection({}, { parent: this });
+        //this.checkedLocations = new app.models.LocationCollection({}, { parent: this });
     }
 });
 app.models.LocationCategoryCollection = Backbone.Collection.extend({
@@ -33,13 +33,22 @@ app.models.LocationCollection = Backbone.Collection.extend({
     sync: function (method, model, options) {
         options = options || {};
         if (method === "read") {
+            // TODO: add support for token auth
+            // TODO: add direct support for deferred / adapter interface
+            console.log("Getting possible locations on route");
+            var headers = app.getSecurityHeaders();
+            $.ajax({
+                url: this.url,
+                cache: false,
+                headers: headers
+                }).done(function (data) {
+                    options.success(data);
+                });
+
             // TODO: Fix this
             //app.adapters.location.findByCategory(parseInt(this.parent.id)).done(function (data) {
             //    options.success(data);
             //});
-
-            // TODO: add support for token auth
-            return Backbone.sync.apply(this, arguments);
         }
     }
 });

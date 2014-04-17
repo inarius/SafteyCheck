@@ -1,19 +1,50 @@
 app.views.HomeView = Backbone.View.extend({
 
     initialize: function () {
-        //TODO: consider splitting most content into separate pages, except small or reusable blocks (like rows or dialogs...)
         //TODO: don't forget app.homeView and app.loginView are both global also!... and prerendered!
-
         //global events
         _.bindAll(this, 'showLogin'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         app.eventBus.on("showLogin:home", this.showLogin); // call to execute: App.eventBus.trigger("showLogin:home");
+
+        var self = this;
+        this.model.allLocations.on("reset", this.render, this);
+        this.model.allLocations.on("add", function (location) {
+            if (self.spinner)
+                self.spinner.spin(false);
+            $('#locations-list', self.el).append(new app.views.LocationListItemView({ model: location }).render().el);
+        });
     },
 
     render: function () {
+        this.$el.empty();
         this.$el.html(this.template());
+
+        //TODO: to alter spinner size: vary the width, radius, and lines
+        var opts = {
+            lines: 50, // The number of lines to draw
+            length: 1, // The length of each line
+            width: 3, // The line thickness
+            radius: 5, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            speed: .7, // Rounds per second
+            trail: 90, // Afterglow percentage
+            hwaccel: true, // Whether to use hardware acceleration
+            opacity: '0.03',
+            color: app.loginView.$el.css('color')
+        };
+        this.spinner = new Spinner(opts).spin();
+
         this.bindDOM();
+        var self = this;
+        _.each(this.model.allLocations.models.attributes, function (location) {
+            self.spinner.spin(false);
+            $('#locations-list', self.el).append(new app.views.LocationListItemView({ model: location }).render().el);
+        }, this);
         return this;
     },
+
 
     bindDOM: function () {
         // No menu needed
@@ -38,6 +69,21 @@ app.views.HomeView = Backbone.View.extend({
         if (event.keyCode === 13) { // enter key pressed
             event.preventDefault();
         }
+    }
+
+});
+
+app.views.LocationListItemView = Backbone.View.extend({
+
+    initialize: function () {
+        this.model.on("change", this.render, this);
+        this.model.on("destroy", this.close, this);
+    },
+
+    render: function () {
+        // setElement() overrides the default this.el div element
+        this.setElement(this.template({ model: this.model.attributes }));
+        return this;
     }
 
 });

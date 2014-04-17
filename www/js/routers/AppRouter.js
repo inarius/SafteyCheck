@@ -18,23 +18,33 @@ app.routers.AppRouter = Backbone.Router.extend({
     // controller functions
     home: function () {
         // TODO? how do we identify that the user didn't get here deliberately? (i.e. from a user tag scan with app closed)
-        app.currentPage = "home";
-        console.log("current page: " + app.currentPage);
-
-        // The home view never changes, so we instantiate and render it only once
-        if (!app.homeView) {
-            app.homeView = new app.views.HomeView();
-            app.homeView.render();
-        } else {
-            console.log('reusing home view');
-            app.homeView.delegateEvents(); // delegate events when the view is recycled
-        }
 
         if (app.user.auth == null) {
             // goto login
             window.location = "#login";
         } else {
             // load the home view
+            app.currentPage = "home";
+            console.log("current page: " + app.currentPage);
+
+            // The home view never changes, so we instantiate and render it only once
+            if (!app.homeView) {
+                app.round.type.allLocations.fetch({
+                    error: function (error) {
+                        // TODO: error handling
+                        console.log(error);
+                        console.log("Location API call failed: " + error);
+                    }
+                });
+                app.homeView = new app.views.HomeView({ model: app.round.type });
+                app.homeView.render();
+
+                //app.homeView = new app.views.HomeView();
+                //app.homeView.render();
+            } else {
+                console.log('reusing home view');
+                app.homeView.delegateEvents(); // delegate events when the view is recycled
+            }
 
             // TODO? ditch pageslider? it seems to just overlap contents
             app.slider.slidePage(app.homeView.$el);

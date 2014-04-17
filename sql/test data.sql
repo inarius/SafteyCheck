@@ -36,6 +36,7 @@ INSERT INTO probation.dbo.category_entries VALUES (99991, 'WFLOC', 'WF Male', nu
 INSERT INTO probation.dbo.category_entries VALUES (99992, 'WFLOC', 'WF Female', null, null, getdate(), 'Work Furlough female round')
 INSERT INTO probation.dbo.category_entries VALUES (99993, 'WFLOC', 'WF Night', null, null, getdate(), 'Work Furlough night round')
 
+-- The following will get overwritten in UT
 INSERT INTO probation.dbo.code_entries VALUES (99901, 'WFLOC', '101', null, null, getdate(), 'Room 101')
 INSERT INTO probation.dbo.code_entries VALUES (99902, 'WFLOC', '102', null, null, getdate(), 'Room 102')
 INSERT INTO probation.dbo.code_entries VALUES (99903, 'WFLOC', 'FTV', null, null, getdate(), 'Female TV')
@@ -43,7 +44,6 @@ INSERT INTO probation.dbo.code_entries VALUES (99904, 'WFLOC', '201', null, null
 INSERT INTO probation.dbo.code_entries VALUES (99905, 'WFLOC', '202', null, null, getdate(), 'Room 202')
 INSERT INTO probation.dbo.code_entries VALUES (99906, 'WFLOC', 'MLaundry', null, null, getdate(), 'Male Laundry')
 INSERT INTO probation.dbo.code_entries VALUES (99907, 'WFLOC', 'MCanteen', null, null, getdate(), 'Male Canteen')
-
 INSERT INTO probation.dbo.code_category_assoc VALUES (99992, 99901, null, null, getdate())
 INSERT INTO probation.dbo.code_category_assoc VALUES (99992, 99902, null, null, getdate())
 INSERT INTO probation.dbo.code_category_assoc VALUES (99992, 99903, null, null, getdate())

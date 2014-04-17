@@ -1,8 +1,10 @@
+var config = {};
+config.api_url = "http://157.145.184.4:58914/";
+config.userInfo_api_url = config.api_url + "api/Account/UserInfo";
+config.locationsCodeTable = "WFLOC";
+
 var app = {
-    config: {
-        api_url: "http://157.145.184.4:58914/",
-        locationsCodeTable: "WFLOC"
-    },
+    config: config,
     views: {},
     models: {},
     routers: {},
@@ -67,13 +69,23 @@ var app = {
 	},
 	getUserInfo: function () {
 		console.log("Getting user data");
-		var userInfoUrl = app.config.api_url + "api/Account/UserInfo";
+		var userInfoUrl = config.userInfo_api_url;
 		var headers = app.getSecurityHeaders();
 		return $.ajax({
 			url: userInfoUrl,
 			cache: false,
 			headers: headers
 		});
+	},
+	getLocations: function () {
+	    console.log("Getting possible locations on route");
+	    var userInfoUrl = app.config.api_url + "api/Account/UserInfo";
+	    var headers = app.getSecurityHeaders();
+	    return $.ajax({
+	        url: userInfoUrl,
+	        cache: false,
+	        headers: headers
+	    });
 	},
 	bindDevice: function () {
 	    document.addEventListener('deviceready', this.deviceready, false);
@@ -197,7 +209,7 @@ var app = {
     },
     compileTemplates: function () {
         app.router = new app.routers.AppRouter();
-        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView", "LocationCategoryButtonView"],
+        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView", "LocationCategoryButtonView", "LocationListItemView"],
             function () {
                 app.router = new app.routers.AppRouter();
                 Backbone.history.start();

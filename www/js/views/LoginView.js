@@ -108,22 +108,41 @@ app.views.LoginView = Backbone.View.extend({
         this.loginSucceeded(authenticationData);
     },
     loginSucceeded: function (authenticationData) {
-        console.log("Login sucessful");
+        app.user.auth = authenticationData;
+        console.log("Logged in as: " + authenticationData.userName);
 
-        var userInfoPromise = app.getUserInfo();
-        userInfoPromise.fail(function (error) {
-            console.log(error);
-            alert(error);
-        });
-        userInfoPromise.done(function (data) {
-            app.user.auth = data;
-            console.log("Logged in as: " + data.userName);
-            window.location = "#";
-        });
+        //var userInfoPromise = app.getUserInfo();
+        //userInfoPromise.fail(function (error) {
+        //    console.log(error);
+        //    alert(error);
+        //});
+        //userInfoPromise.done(function (data) {
+        //    console.log("Logged in as: " + data.userName);
+        //    window.location = "#";
+        //});
+
+        //var locationsPromise = app.getLocations();
+        //locationsPromise.fail(function (error) {
+        //    console.log(error);
+        //    alert(error);
+        //});
+        //locationsPromise.error(function (error) {
+        //    console.log(error);
+        //    alert(error);
+        //});
+        //locationsPromise.done(function (data) {
+        //    app.round.locations = data;
+        //    console.log("Grabbed possible locations");
+        //    console.log(data);
+        //    window.location = "#";
+        //});
 
         // TODO: does this work?
         // Reregister all view events
         this.initialize();
+
+        // Let the home route (controller) fetch the locations
+        window.location = "#";
     },
     onkeypress: function (event) {
         if (event.keyCode === 13) { // enter key pressed
