@@ -2,7 +2,7 @@
     enabled: true,
     weinre_enabled: true,
     weinre_server_id: "nfc",
-    weinre_server_url: "http://169.231.51.222:8080/",
+    weinre_server_url: "http://157.145.184.4:8080/",
     weinre_script_url: "/js/debug/weinre-target-script.js",
     jsconsole_enabled: false,
     jsconsole_id: "VCPA"
@@ -21,14 +21,14 @@ debug.sampleNfcEvent = {
         ndefMessage: [{
             id: [],
             type: "application/prismuser",
-            payload: '{"tag":1,"login":"simonej","otp":"0123456789"}',
+            payload: '{"tag":1,"login":"simonej","otp":"1234567890"}',
             tnf: 2
         }]
     }
 };
 
 if (debug) {
-    if (debug.weinre_enabled) {
+    if (debug.weinre_enabled && !modjewel) {
         window.WeinreServerId = debug.weinre_server_id; // <-- your unique identifier on the server below
         window.WeinreServerURL = debug.weinre_server_url; // <-- weinre server to use
         (function (e) {

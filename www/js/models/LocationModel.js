@@ -1,14 +1,14 @@
-// RoundTypes
-app.models.RoundType = Backbone.Model.extend({
+// LocationCategories
+app.models.LocationCategory = Backbone.Model.extend({
     initialize: function () {
-        this.uri = app.config.api_url + 'api/roundType/' + this.id;
+        this.uri = app.config.api_url + 'api/locationCategory/' + this.id;
         this.allLocations = new app.models.LocationCollection({}, {parent: this});
         this.checkedLocations = new app.models.LocationCollection({}, { parent: this });
     }
 });
-app.models.RoundTypeCollection = Backbone.Collection.extend({
-    model: app.models.RoundType,
-    url: app.config.api_url + 'api/roundTypes.json'
+app.models.LocationCategoryCollection = Backbone.Collection.extend({
+    model: app.models.LocationCategory,
+    url: app.config.api_url + 'api/locationCategories.json?table=' + app.config.locationsCodeTable
 });
 
 // Locations
@@ -27,13 +27,14 @@ app.models.LocationCollection = Backbone.Collection.extend({
     model: app.models.Location,
     initialize: function (attributes, options) {
         this.parent = options.parent;
-        this.url = this.parent.uri + '/locations';
+        this.uri = this.parent.uri + '/locations';
+        this.url = this.uri + '.json';
     },
     sync: function (method, model, options) {
         options = options || {};
         if (method === "read") {
             // TODO: Fix this
-            //app.adapters.location.findByRound(parseInt(this.parent.id)).done(function (data) {
+            //app.adapters.location.findByCategory(parseInt(this.parent.id)).done(function (data) {
             //    options.success(data);
             //});
 

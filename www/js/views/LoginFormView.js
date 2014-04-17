@@ -3,10 +3,10 @@ app.views.LoginFormView = Backbone.View.extend({
     initialize: function () {
         var self = this;
         this.model.on("reset", this.render, this);
-        this.model.on("add", function (roundType) {
+        this.model.on("add", function (locationCategory) {
             if (self.spinner)
                 self.spinner.spin(false);
-            $('#submit-buttons', self.el).append(new app.views.RoundTypeButtonView({ model: roundType }).render().el);
+            $('#submit-buttons', self.el).append(new app.views.LocationCategoryButtonView({ model: locationCategory }).render().el);
         });
     },
 
@@ -33,9 +33,9 @@ app.views.LoginFormView = Backbone.View.extend({
 
         this.bindDOM();
         var self = this;
-        _.each(this.model.models, function (roundType) {
+        _.each(this.model.models, function (locationCategory) {
             self.spinner.spin(false);
-            $('#submit-buttons', self.el).append(new app.views.RoundTypeButtonView({ model: roundType }).render().el);
+            $('#submit-buttons', self.el).append(new app.views.LocationCategoryButtonView({ model: locationCategory }).render().el);
         }, this);
         return this;
     },
@@ -53,9 +53,9 @@ app.views.LoginFormView = Backbone.View.extend({
                     console.log("success!");
                     $('#loginError').removeClass("appear");
                     console.log(data);
-                    app.setAccessToken(data.access_token);
-                    console.log("Stored access token: " + data.access_token);
-                    self.loginSucceeded();
+
+                    //TODO? just display the write instructions on screen?
+                    app.eventBus.trigger("writeNfcPrismUser:login", data);
                 },
                 error: function (data) {
                     console.log("Login failed!");
@@ -82,22 +82,10 @@ app.views.LoginFormView = Backbone.View.extend({
         if (event.keyCode === 13) { // enter key pressed
             event.preventDefault();
         }
-    },
-
-    loginSucceeded: function () {
-        console.log("Login sucessful");
-        var userInfoPromise = app.getUserInfo();
-        userInfoPromise.done(function (data) {
-            app.user.auth = data;
-            console.log("Logged in as: " + data.userName);
-            alert(data.userName);
-            window.location = "#home";
-        });
     }
-
 });
 
-app.views.RoundTypeButtonView = Backbone.View.extend({
+app.views.LocationCategoryButtonView = Backbone.View.extend({
 
     //tagName: "button",
     //className: "topcoat-button--cta",

@@ -31,6 +31,12 @@ To build the application, package the Application files listed below
 into a zip and upload it to PhoneGap Build. The application can then
 be installed or downloaded from the PhoneGap Build website.
 
+To build a new Zepto distribution, download the make files
+(https://github.com/madrobby/zepto) and run:
+
+> npm install
+> set MODULES=zepto event ajax form deferred callbacks fx
+> npm run-script dist
 
 About the file structure
 ========================
@@ -49,13 +55,14 @@ These files (only) must be included in the PhoenGap Build package:
 + \www\views\*
 + \www\index.html
 + \www\config.xml
++ \www\start.html
 
-Modified PhoneGap project files (for testing)
----------------------------------------------
-These files have been modified to facilitate local testing and 
-should _not_ be replaced with files distributed in PhoneGap apks:
-- \www\cordova.js
-- \www\phonegap.js
+Remote debugging (for testing)
+------------------------------
+These files may be optionally included to enable remote debugging
+from the brwoser or mobile device. They should not be deployed in
+production:
+- \www\js\debug\*
 
 Non-project files (for testing)
 -------------------------------
@@ -63,3 +70,10 @@ These files are for local testing infrastructure only and are not a
 component of the application project:
 - \www\node_modules\*
 - \www\server.js
+
+Modified PhoneGap project files (for testing)
+---------------------------------------------
+These files have been modified to facilitate local testing and 
+should _not_ be replaced with files distributed in PhoneGap apks:
+- \www\cordova.js
+- \www\phonegap.js

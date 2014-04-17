@@ -1,6 +1,7 @@
 var app = {
     config: {
-        api_url: "http://169.231.51.222:58914/"
+        api_url: "http://157.145.184.4:58914/",
+        locationsCodeTable: "WFLOC"
     },
     views: {},
     models: {},
@@ -9,13 +10,15 @@ var app = {
     adapters: {},
     user: { 
         session: null,
-        auth: null
+        auth: null,
+        userTagMessage: null
     },
     currentPage: null,
     round: {
         type: {},
         locations: {}
     },
+    writeNfc: false, // TODO: DON'T DO THIS!
 	scans: [],
 	initialize: function () {
 	    //app.clearScreen();
@@ -64,7 +67,7 @@ var app = {
 	},
 	getUserInfo: function () {
 		console.log("Getting user data");
-		var userInfoUrl = "http://157.145.184.4:58914/api/Account/UserInfo";
+		var userInfoUrl = app.config.api_url + "api/Account/UserInfo";
 		var headers = app.getSecurityHeaders();
 		return $.ajax({
 			url: userInfoUrl,
@@ -108,6 +111,10 @@ var app = {
         app.runLogic();
     },
     onNdef: function (nfcEvent) {
+        if (app.writeNfc) {
+            app.eventBus.trigger("writeNfcPrismUser:login", null);
+            return;
+        }
         debug.nfcEvent = nfcEvent;
         console.log("debug.nfcEvent stored");
         console.log("encoded nfcEvent.tag: " + JSON.stringify(nfcEvent.tag));
@@ -190,7 +197,7 @@ var app = {
     },
     compileTemplates: function () {
         app.router = new app.routers.AppRouter();
-        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView", "RoundTypeButtonView"],
+        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView", "LocationCategoryButtonView"],
             function () {
                 app.router = new app.routers.AppRouter();
                 Backbone.history.start();

@@ -35,6 +35,8 @@ app.routers.AppRouter = Backbone.Router.extend({
             window.location = "#login";
         } else {
             // load the home view
+
+            // TODO? ditch pageslider? it seems to just overlap contents
             app.slider.slidePage(app.homeView.$el);
         }
     },
