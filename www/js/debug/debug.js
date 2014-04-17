@@ -6,7 +6,22 @@
     weinre_script_url: "/js/debug/weinre-target-script.js",
     jsconsole_enabled: false,
     jsconsole_id: "VCPA"
-    };
+};
+debug.tests = [
+    function step1() {
+        // Perform a test user tag scan
+        app.eventBus.trigger("onNfcPrismUser:login", debug.sampleNfcEvent, 0);
+    },
+    function step2() {
+        // scan the first location
+        // the proper way to call this is: app.round.type.allLocations.get(99906).set("dt_check", Date.now());
+        app.round.type.allLocations.models[0].set("dt_check", Date.now());
+    },
+    function step3() {
+        // scan the third location
+        app.round.type.allLocations.models[2].set("dt_check", Date.now());
+    }
+];
 debug.sampleNfcEvent = {
     tag: {
         isWritable: true,

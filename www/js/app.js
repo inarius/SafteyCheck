@@ -226,6 +226,9 @@ var app = {
         //app.tagStatusTemplate = Handlebars.compile(template);
     },
     addTemplateHelpers: function () {
+        Handlebars.registerHelper('formatTime', function (date) {
+            return new Date(date).toTimeString().substring(0,5);
+        });
         Handlebars.registerHelper('bytesToString', function(byteArray) {
             return nfc.bytesToString(byteArray);
         });

@@ -2,9 +2,9 @@
 <div id="side-menu">
 </div>
 -->
-<div id="right">
+<div id="right" class="home-page">
     <header class="topcoat-navigation-bar">
-        <div class="topcoat-navigation-bar__item center full">
+        <div class="topcoat-navigation-bar__item full">
 <!--        <button class="topcoat-icon-button--quiet left off" id="side-menu-button">
                 <div class='topcoat-icon icomatic'>listview</div>
             </button>-->
@@ -16,10 +16,12 @@
         </div>
     </header>
     <div id="content">
-        <ol id="locations-list">
+        <div class="topcoat-list">
+            <h3 class="topcoat-list__header center">{{model.attributes.name}} locations to scan:</h3>
+            <ol id="locations-list" class="topcoat-list__container">
 
-        </ol>
-    </div>
+            </ol>
+        </div>
 <!--<div id="messageContents" class="hidden">
         <div class="instructions">
             <div class="bubble">

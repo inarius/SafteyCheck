@@ -36,7 +36,7 @@ app.routers.AppRouter = Backbone.Router.extend({
                         console.log("Location API call failed: " + error);
                     }
                 });
-                app.homeView = new app.views.HomeView({ model: app.round.type });
+                app.homeView = new app.views.HomeView({ model: app.round.type, type: app.round.type.attributes });
                 app.homeView.render();
 
                 //app.homeView = new app.views.HomeView();

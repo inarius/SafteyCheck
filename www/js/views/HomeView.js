@@ -53,7 +53,7 @@ app.views.HomeView = Backbone.View.extend({
     },
 
     events: { //local events
-        //"keyup .search-key":    "search",
+        "click .comments":    "onCommentClick",
         //"keypress .search-key": "onkeypress"
     },
 
@@ -69,8 +69,11 @@ app.views.HomeView = Backbone.View.extend({
         if (event.keyCode === 13) { // enter key pressed
             event.preventDefault();
         }
+    },
+    onCommentClick: function (event) {
+        var $target = $(event.target);
+        console.log($target.parent());
     }
-
 });
 
 app.views.LocationListItemView = Backbone.View.extend({
@@ -82,7 +85,9 @@ app.views.LocationListItemView = Backbone.View.extend({
 
     render: function () {
         // setElement() overrides the default this.el div element
-        this.setElement(this.template({ model: this.model.attributes }));
+        //this.setElement(this.template({ model: this.model.attributes }));
+        // I can't use setElement because it won't re-render?
+        this.$el.html(this.template({ model: this.model.attributes }));
         return this;
     }
 

@@ -5,6 +5,10 @@ body {
 }
 a {
     color: #cccdce;
+    cursor:pointer;
+}
+a:hover {
+    color: #b7b8dd;
 }
 
 .instructions {
@@ -24,7 +28,6 @@ a {
 
 h1 {
   font-size: 1.25em;
-  text-align: center;
   border-bottom: 1px solid #000;
   padding: 0 10px 10px 10px;
 }
@@ -133,8 +136,9 @@ div.record {
 	background-color:#a93;
 }
 .topcoat-icon.icomatic {
-	font-size:28px;
-	padding:2px;
+    /*width: 1.75rem;*/
+	font-size:26px;
+	/*padding:2px;*/
 }
 .topcoat-icon.icomatic.inline-icon {
     padding-left:.1em;
@@ -168,8 +172,8 @@ div.record {
 .topcoat-navigation-bar__item #finish-button {
     position: absolute;
     top: .5em;
-    right: 0;
-    padding: 0 .75rem;
+    right: -.5em;
+    padding: 0 .5rem;
 }
 .topcoat-navigation-bar__item #side-menu-button {
     position: absolute;
@@ -216,6 +220,25 @@ div.record {
     width: 48%;
     float: left;
     margin: 1% 1%;
+}
+
+/* Home page */
+
+.home-page ol {
+    font-size: 110%;
+}
+.home-page ol li {
+    color: #e0e1e1;
+    padding: .52rem .6rem;
+}
+.home-page ol li.unchecked {
+    color: #888;
+    text-shadow: 2px 1px 2px #222;
+    background-color: #4c4c4c;
+}
+.home-page ol li a.comments {
+    /*color:#cccdce;*/
+    float:right;
 }
 
 /* Slide menu */

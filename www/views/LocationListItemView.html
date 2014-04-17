@@ -1,1 +1,14 @@
-<li id="{{model.id}}">{{model.description}}</li>
+<li {{#if model.dt_check }}
+    class="topcoat-list__item checked"
+{{else}}
+    class="topcoat-list__item unchecked"
+{{/if}} id="{{model.id}}">
+    {{model.description}}
+    {{#if model.dt_check }}
+        <span class="scandate">
+            <span class="topcoat-icon icomatic">checkmark</span> 
+            scanned ({{formatTime model.dt_check}})
+        </span>
+        <a class="comments topcoat-icon icomatic">comment</a>
+    {{/if}}
+</li>
