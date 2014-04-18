@@ -73,12 +73,15 @@ app.views.HomeView = Backbone.View.extend({
     onCommentClick: function (event) {
         var $target = $(event.target);
         console.log($target.parent());
+        var modalCommentsView = new app.views.LocationCommentsModalView({ model: this.model.allLocations.get($target.parent().attr("id")) });
+        $("body").append(modalCommentsView.render().el);
     }
 });
 
 app.views.LocationListItemView = Backbone.View.extend({
 
     initialize: function () {
+        // TODO: Need to call a function and try to sync on change
         this.model.on("change", this.render, this);
         this.model.on("destroy", this.close, this);
     },
@@ -93,19 +96,18 @@ app.views.LocationListItemView = Backbone.View.extend({
 
 });
 
-app.views.InstructionsDivView = Backbone.View.extend({
-
-    //tagName: "li",
-
-    //className: "topcoat-list__item",
+app.views.LocationCommentsModalView = Backbone.Modal.extend({
 
     initialize: function () {
+        // implement the base Modal properties
+        this.cancelEl = 'a.cancel';
+
+        // TODO: How best to save the comment? Just write it to the location model and let the parent sync handle it?
+
+        // we can't remder (or bind to) the view ourselves without messing up the Modal?
+        //this.template = this.template({ model: this.model.attributes });
         //this.model.on("change", this.render, this);
         //this.model.on("destroy", this.close, this);
-    },
-
-    render: function () {
-        return this.template(this);
     }
 
 });

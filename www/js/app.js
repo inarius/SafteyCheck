@@ -209,7 +209,7 @@ var app = {
     },
     compileTemplates: function () {
         app.router = new app.routers.AppRouter();
-        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "InstructionsDivView", "LocationCategoryButtonView", "LocationListItemView"],
+        app.utils.templates.load(["HomeView", "LoginView", "LoginFormView", "LocationCategoryButtonView", "LocationListItemView", "LocationCommentsModalView"],
             function () {
                 app.router = new app.routers.AppRouter();
                 Backbone.history.start();
