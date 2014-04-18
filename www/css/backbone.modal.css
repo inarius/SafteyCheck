@@ -10,15 +10,45 @@
   padding: 50px 10px;
   overflow-x: auto;
   overflow-y: scroll; }
-  .bbm-wrapper * {
+.bbm-wrapper * {
     box-sizing: border-box; }
-
 .bbm-modal {
-  border-radius: 3px;
   margin: auto;
-  width: auto;
-  max-width: 550px; }
-
+}
 .bbm-views {
   width: 100%;
   box-sizing: border-box; }
+
+/* theme styles */
+.bbm-wrapper {
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-transition: background-color 0.3s; 
+}
+.bbm-modal {
+  background: #4b4d4e;
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.9); 
+  border-radius: 10px;
+  width: 90%;
+  max-width: 550px;
+}
+.bbm-modal__section {
+  padding: 0px 15px 5px;
+  text-align:center;
+}
+.bbm-modal__section textarea {
+    width:100%;
+}
+.bbm-modal__section .topcoat-textarea {
+    padding: .5rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+.bbm-modal__title {
+  margin: 0;
+  font-weight: normal;
+  line-height: 1em;
+}
+.bbm-modal__topbar, .bbm-modal__bottombar {
+  text-align:center;
+  padding: .5em .6em;
+}
