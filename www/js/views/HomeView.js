@@ -4,7 +4,9 @@ app.views.HomeView = Backbone.View.extend({
         //TODO: don't forget app.homeView and app.loginView are both global also!... and prerendered!
         //global events
         _.bindAll(this, 'showLogin'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
+        _.bindAll(this, 'onNfcLocation'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         app.eventBus.on("showLogin:home", this.showLogin); // call to execute: App.eventBus.trigger("showLogin:home");
+        app.eventBus.on("onNfcLocation:home", this.onNfcLocation); // call to execute: app.eventBus.trigger("onNfcLocation:home", nfcEvent, ndefMessageIndex);
 
         var self = this;
         this.model.allLocations.on("reset", this.render, this);
@@ -64,6 +66,17 @@ app.views.HomeView = Backbone.View.extend({
 
     showLogin: function() {
         app.slider.slidePage(app.loginView.$el);
+    },
+    onNfcLocation: function (nfcEvent, ndefIndex) {
+        // TODO: (eventually) should validate the location tag id against the database
+        // (precondition) we are here because the nfcEvent was a scan of type "application/location on the home page"
+        var payload = JSON.parse(nfcEvent.tag.ndefMessage[ndefIndex].payload);
+        if (payload.uri) {
+            payload.location_code = uri.match(/.*\/(.*)$/)[0];
+        }
+        else {
+            console.log('Invalid location scanned');
+        }
     },
     onkeypress: function (event) {
         if (event.keyCode === 13) { // enter key pressed
