@@ -154,7 +154,13 @@ var app = {
                     }
                     break;
                 case "application/location":
-                    app.onNfcLocation(nfcEvent, i);
+                    if (app.currentPage == "home") {
+                        app.eventBus.trigger("onNfcLocation:home", nfcEvent, i);
+                    }
+                    else {
+                        // otherwise ignore the scan
+                        console.log("Not on login page -- scan ignored");
+                    }
                     break;
             }
         }
@@ -165,9 +171,6 @@ var app = {
         navigator.notification.vibrate(100);
         app.hideInstructions();
         app.runLogic();
-    },
-    onNfcLocation: function (nfcEvent, ndefIndex) {
-        alert("Location scanned: " + JSON.stringify(nfcEvent.tag.ndefMessage[ndefIndex].payload));
     },
     clearScreen: function () {
         tagContents.innerHTML = "";
@@ -370,3 +373,30 @@ function testScan(string) {
     app.runLogic();
 }
 
+function clone(obj) {
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+    // Handle Date
+    if (obj instanceof Date) {
+        var copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+    // Handle Array
+    if (obj instanceof Array) {
+        var copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+    // Handle Object
+    if (obj instanceof Object) {
+        var copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+    return JSON.parse(JSON.stringify(a));
+}

@@ -5,42 +5,59 @@
     weinre_server_url: "http://157.145.184.4:8080/",
     weinre_script_url: "/js/debug/weinre-target-script.js",
     jsconsole_enabled: false,
-    jsconsole_id: "VCPA"
-};
-debug.tests = [
-    function step1() {
-        // Perform a test user tag scan
-        app.eventBus.trigger("onNfcPrismUser:login", debug.sampleNfcEvent, 0);
+    jsconsole_id: "VCPA",
+    nfcBoilerplate: {
+        tag: {
+            isWritable: true,
+            id: [4, -87, 16, -14, 69, 43, -128],
+            techTypes: [
+                "android.nfc.tech.MifareUltralight",
+                "android.nfc.tech.NfcA",
+                "android.nfc.tech.Ndef"],
+            type: "NFC Forum Type 2",
+            canMakeReadOnly: true,
+            maxSize: 137,
+            ndefMessage: [{
+                id: [],
+                type: "",
+                payload: "",
+                tnf: 2
+            }]
+        }
     },
-    function step2() {
-        // scan the first location
-        // the proper way to call this is: app.round.type.allLocations.get(99906).set("dt_check", Date.now());
-        app.round.type.allLocations.models[0].set("dt_check", Date.now());
+    buildTestNfc: function (ndef) {
+        var nfcEvent = clone(debug.nfcBoilerplate);
+        nfcEvent.tag.ndefMessage[0] = $.extend(nfcEvent.tag.ndefMessage[0], ndef);
+        return nfcEvent;
     },
-    function step3() {
-        // scan the third location
-        app.round.type.allLocations.models[2].set("dt_check", Date.now());
-    }
-];
-debug.sampleNfcEvent = {
-    tag: {
-        isWritable: true,
-        id: [4, -87, 16, -14, 69, 43, -128],
-        techTypes: [
-            "android.nfc.tech.MifareUltralight",
-            "android.nfc.tech.NfcA",
-            "android.nfc.tech.Ndef"],
-        type: "NFC Forum Type 2",
-        canMakeReadOnly: true,
-        maxSize: 137,
-        ndefMessage: [{
-            id: [],
-            type: "application/prismuser",
-            payload: '{"tag":1,"login":"simonej","otp":"1234567890"}',
-            tnf: 2
-        }]
-    }
+    tests: [
+        function step1() {
+            // Perform a test user tag scan
+            app.eventBus.trigger("onNfcPrismUser:login", debug.sampleNfcEvent, 0);
+        },
+        function step2() {
+            // scan the first location
+            // the proper way to call this is: app.eventBus.trigger("onNfcLocation:home", debug.nfcLocation(06), 0);
+            app.eventBus.trigger("onNfcLocation:home", debug.nfcLocation(04), 0);
+        },
+        function step3() {
+            // scan the third location
+            app.eventBus.trigger("onNfcLocation:home", debug.nfcLocation(06), 0);
+        }
+    ]
 };
+
+// preload some fake nfc tags for testing
+debug.sampleNfcEvent = debug.buildTestNfc({
+    type: "application/prismuser",
+    payload: '{"tag":1,"login":"simonej","otp":"1234567890"}'
+});
+debug.nfcLocation = function (id) {
+    return debug.buildTestNfc({
+        type: "application/location",
+        payload: '{"tag":' + id + ',"uri":"https://probation.co.ventura.ca.us/id/location/' + (99900 + parseInt(id)) + '"}'
+    });
+}
 
 if (debug) {
     if (debug.weinre_enabled && typeof modjewel == 'undefined') {

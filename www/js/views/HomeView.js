@@ -72,7 +72,8 @@ app.views.HomeView = Backbone.View.extend({
         // (precondition) we are here because the nfcEvent was a scan of type "application/location on the home page"
         var payload = JSON.parse(nfcEvent.tag.ndefMessage[ndefIndex].payload);
         if (payload.uri) {
-            payload.location_code = uri.match(/.*\/(.*)$/)[0];
+            payload.location_code = payload.uri.match('[^/]*$')[0];
+            this.model.allLocations.get(payload.location_code).set("dt_check", Date.now());
         }
         else {
             console.log('Invalid location scanned');
