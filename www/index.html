@@ -1,7 +1,37 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
-	<meta name="viewport" content="width=320, user-scalable=no" />
+<script>
+    // hack: to support both phone and tablet (the easy way)
+    // user agent targeting
+    function writeViewport() {
+        var ua = navigator.userAgent;
+        var viewportChanged = false;
+        if (ua.indexOf("Android") >= 0) {
+            if (ua.indexOf("Chrome/30.0.0") >= 0) { // Chrome v30 WebKit
+                document.write('<meta name="viewport" content="width=400, initial-scale=1.5, minimum-scale=1.5, maximum-scale=1.5" />');
+                viewportChanged = true;
+            }
+            else { // Probably a non-Chrome WebKit
+                document.write('<meta name="viewport" content="width=320, user-scalable=no, initial-scale=1.5, minimum-scale=1.5, maximum-scale=1.5" />');
+                viewportChanged = true;
+            }
+        }
+        if (ua.indexOf("Firefox") >= 0) {
+            scale = (getScaleWithScreenwidth() / 2);
+            document.write('<meta name="viewport" content="width=640, user-scalable=false, initial-scale=' + scale + '" />');
+            viewportChanged = true;
+        }
+        if (!viewportChanged) {
+            document.write('<meta name="viewport" content="width=320, user-scalable=no" />');
+        }
+        if (ua.indexOf("IEMobile") >= 0) {
+            document.write('<meta name="MobileOptimized" content="640" />');
+        }
+    }
+    writeViewport();
+</script>
+    <meta name="HandheldFriendly" content="true" />
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 	<title>Safety check</title>
 	<link rel="stylesheet" href="css/topcoat-mobile-dark.css" media="screen">
@@ -10,9 +40,10 @@
     <link rel="stylesheet" href="font/icomatic.css" media="screen">
     <link rel="stylesheet" href="css/index.css" media="screen">
 </head>
+
+
 <body>
     <!-- Debug scripts - include to enable debugging libraries and extensions -->
-    <script src="http://157.145.184.4:8080/target/target-script-min.js#nfc"></script>
     <script src="js/debug/debug.js"></script>
 
     <!-- PhoneGap -->
@@ -28,6 +59,7 @@
     <script src="lib/pageslider.js"></script>
     <script src="lib/spin.js"></script>
     <script src="lib/zepto.spin.js"></script>
+    <script src="font/icomatic.js"></script>
 
     <!-- Application scripts -->
     <script src="js/app.js"></script>

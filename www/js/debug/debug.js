@@ -43,11 +43,11 @@ debug.sampleNfcEvent = {
 };
 
 if (debug) {
-    if (debug.weinre_enabled && !modjewel) {
+    if (debug.weinre_enabled && typeof modjewel == 'undefined') {
         window.WeinreServerId = debug.weinre_server_id; // <-- your unique identifier on the server below
         window.WeinreServerURL = debug.weinre_server_url; // <-- weinre server to use
         (function (e) {
-            e.setAttribute("src", debug.weinre_script_url); document.getElementsByTagName("body")[0].appendChild(e);
+            e.setAttribute("src", debug.weinre_server_url + "/target/target-script-min.js#" + debug.weinre_server_id); document.getElementsByTagName("body")[0].appendChild(e);
         })(document.createElement("script"));
     }
     if (debug.jsconsole_enabled) {
