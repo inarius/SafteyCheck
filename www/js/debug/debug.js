@@ -55,7 +55,7 @@ debug.sampleNfcEvent = debug.buildTestNfc({
 debug.nfcLocation = function (id) {
     return debug.buildTestNfc({
         type: "application/location",
-        payload: '{"tag":' + id + ',"uri":"https://probation.co.ventura.ca.us/id/location/' + (99900 + parseInt(id)) + '"}'
+        payload: '{"tag":' + (900 + parseInt(id)) + ',"uri":"https://probation.co.ventura.ca.us/id/location/' + (99900 + parseInt(id)) + '"}'
     });
 }
 
