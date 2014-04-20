@@ -1,4 +1,5 @@
-﻿var debug = {
+﻿// TODO? split this between debugging and tests?
+var debug = {
     enabled: true,
     weinre_enabled: true,
     weinre_server_id: "nfc",
@@ -59,7 +60,7 @@ debug.nfcLocation = function (id) {
     });
 }
 
-if (debug) {
+if (debug.enabled) {
     if (debug.weinre_enabled && typeof modjewel == 'undefined') {
         window.WeinreServerId = debug.weinre_server_id; // <-- your unique identifier on the server below
         window.WeinreServerURL = debug.weinre_server_url; // <-- weinre server to use

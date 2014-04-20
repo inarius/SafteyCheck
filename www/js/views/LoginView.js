@@ -93,6 +93,7 @@ app.views.LoginView = Backbone.View.extend({
                     navigator.notification.alert(reason, function () { }, "There was a problem");
                     alert("boo!");
                     console.log("boo! " + reason);
+                    // TODO: dont store token and prompt for tag again - if we don't get it kick us back out to the login page
                 }
             });
             //    }), 
@@ -121,21 +122,20 @@ app.views.LoginView = Backbone.View.extend({
         //    window.location = "#";
         //});
 
-        //var locationsPromise = app.getLocations();
-        //locationsPromise.fail(function (error) {
-        //    console.log(error);
-        //    alert(error);
-        //});
-        //locationsPromise.error(function (error) {
-        //    console.log(error);
-        //    alert(error);
-        //});
-        //locationsPromise.done(function (data) {
-        //    app.round.locations = data;
-        //    console.log("Grabbed possible locations");
-        //    console.log(data);
-        //    window.location = "#";
-        //});
+        // TODO: add the session record first!
+
+        // TODO: create a new specialized route model here instead of using LocationCategory and copy the locations over
+        // TODO: create an app method for this save and use promise callback approach (to handle errors/logic)
+        // use LocationCategory to save the route start
+        app.round.type.save({ startDate: new Date().toLocaleString() }, {
+            success: function (response) {
+                console.log('round start saved with id: ' + response);
+            },
+            error: function (error) {
+                // TODO: do something here!
+                console.log('failed to save round start: ' + error);
+            }
+        });
 
         // TODO: does this work?
         // Reregister all view events
