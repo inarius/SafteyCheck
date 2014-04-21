@@ -125,6 +125,7 @@ app.views.LocationCommentsModalView = Backbone.Modal.extend({
     initialize: function () {
         // implement the base Modal properties
         this.cancelEl = 'a.cancel';
+        this.submitEl = 'a.save';
 
         // TODO: How best to save the comment? Just write it to the location model and let the parent sync handle it?
 
@@ -132,6 +133,8 @@ app.views.LocationCommentsModalView = Backbone.Modal.extend({
         //this.template = this.template({ model: this.model.attributes });
         //this.model.on("change", this.render, this);
         //this.model.on("destroy", this.close, this);
+    },
+    clickOutside: function (e) {
+        return false; // ignore an outside click
     }
-
 });
