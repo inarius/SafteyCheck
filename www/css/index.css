@@ -6,6 +6,13 @@ body {
 a {
     color: #cccdce;
     cursor:pointer;
+    text-decoration:underline;
+}
+.topcoat-icon a,
+.topcoat-icon.a,
+.icomatic a,
+.icomatic.a {
+    text-decoration:none;
 }
 a:hover {
     color: #b7b8dd;

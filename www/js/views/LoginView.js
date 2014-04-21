@@ -1,6 +1,7 @@
 app.views.LoginView = Backbone.View.extend({
 
     initialize: function () {
+        this.locationCategories = new app.models.LocationCategoryCollection(); // we build the model for LoginFormView in this view
         //global events
         _.bindAll(this, 'showLoginForm'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         _.bindAll(this, 'onNfcPrismUser'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
@@ -23,10 +24,9 @@ app.views.LoginView = Backbone.View.extend({
     },
 
     events: { //local events
+        "click a#retryLocationCategories": "fetchLocationCategories"
         //"keyup .search-key":    "search",
         //"keypress .search-key": "onkeypress"
-        // TODO? how to do nfc here? EventBus? 
-        // TODO? Perhaps a global function could consider app state and call eventBus.on with the proper :context?
     },
 
     animate: function() {
@@ -42,18 +42,9 @@ app.views.LoginView = Backbone.View.extend({
     },
     showLoginForm: function (userTagMessage) {
         // test with: app.eventBus.trigger("onNfcPrismUser:login",debug.sampleNfcEvent,0);
-
-        // begin grabbing the LocationCategory model data
-        var locationCategories = new app.models.LocationCategoryCollection();
-        locationCategories.fetch({
-            error: function (error) {
-                // TODO: error handling
-                console.log(error);
-                console.log("LocationCategory API call failed: " + error);
-            }
-        });
+        this.fetchLocationCategories();
         app.user.userTagMessage = userTagMessage;
-        this.loginFormView = new app.views.LoginFormView({ model: locationCategories });
+        this.loginFormView = new app.views.LoginFormView({ model: this.locationCategories });
         this.loginFormView.parent = this;
         $('.login-page #content', this.el).html(this.loginFormView.render().el);
         $('h1').text("Please enter your password");
@@ -61,6 +52,35 @@ app.views.LoginView = Backbone.View.extend({
         //pre-fill input fields
         $("#loginForm input[name='username']", this.el).val(userTagMessage.login);
         $("#loginForm input[name='one_time_password']", this.el).val(userTagMessage.otp);
+    },
+    fetchLocationCategories: function() { // TODO? can this be made any simpler?
+        // begin grabbing the LocationCategory model data
+        var self = this;
+        if (self.fetchSuccess) { return self.fetchSuccess; }
+        this.locationCategories.fetch({
+            timeout:8000,
+            success: function () {
+                self.fetchSuccess = true;
+                if (self.fetchFailNotifier)
+                    self.fetchFailNotifier.destroy(); // kill the notification in case it's open from a prior failure
+            },
+            error: function (error) {
+                // TODO: error handling
+                console.log(error);
+                console.log("LocationCategory API call failed: " + error);
+                self.fetchFailNotifier = app.notifier.notify({
+                    message: 'Failed to reach the server: <a id="retryLocationCategories" href="#nowhere">Rety now</a>',
+                    destroy: true, // kill the notification in case it's open from a prior failure
+                    type: 'error',
+                    ms: null,
+                    hideOnClick: true // keep this notiffication up until they click on it (to retry)
+                })
+                .on('destroy', function () {
+                    if (!self.fetchSuccess)
+                        self.fetchLocationCategories(); // call me again... // TODO? should this be a loop to avoid recursion?
+                });
+            }
+        });
     },
     onNfcPrismUser: function (nfcEvent, ndefIndex) {
         // TODO: (eventually) should validate the user tag separately (first) for smoother multi-factor auth
