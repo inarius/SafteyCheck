@@ -56,8 +56,8 @@ app.views.HomeView = Backbone.View.extend({
     },
 
     events: { //local events
-        "click .comments":    "onCommentClick",
-        //"keypress .search-key": "onkeypress"
+        "click .comments": "onCommentClick",
+        "click #finish-button": "onFinishClick"
     },
 
     search: function (event) {
@@ -93,6 +93,22 @@ app.views.HomeView = Backbone.View.extend({
         var modalCommentsView = new app.views.LocationCommentsModalView({ model: this.model.allLocations.get($target.parent().attr("id")) });
         modalCommentsView.parent = this;
         $("body").append(modalCommentsView.render().el);
+    },
+    onFinishClick: function(event) {
+        // TODO: create a new specialized route model here instead of using LocationCategory and copy the locations over
+        // TODO? create an app method for this save and use promise callback approach (to handle errors/logic)?
+        // use LocationCategory to save the route finish
+        app.round.type.save({ endDate: new Date().toLocaleString() }, {patch: true, // use a patch to just send the endDate
+            success: function (response) {
+                console.log('round end saved');
+                // TODO: Add a nice completion message!
+                window.location = "#login";
+            },
+            error: function (error) {
+                // TODO: do something here!
+                console.log('failed to save round end: ' + error);
+            }
+        });
     },
     syncLocationChecks: function () {
         this.model.allLocations.sync("update", null, {  // to the web services! (save[patch] all every time incase we lost connection somewhere)

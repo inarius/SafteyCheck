@@ -125,7 +125,7 @@ app.views.LoginView = Backbone.View.extend({
         // TODO: add the session record first!
 
         // TODO: create a new specialized route model here instead of using LocationCategory and copy the locations over
-        // TODO: create an app method for this save and use promise callback approach (to handle errors/logic)
+        // TODO? create an app method for this save and use promise callback approach (to handle errors/logic)?
         // use LocationCategory to save the route start
         app.round.type.save({ startDate: new Date().toLocaleString() }, {
             success: function (response) {

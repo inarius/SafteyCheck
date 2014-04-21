@@ -13,27 +13,43 @@ app.models.LocationCategory = Backbone.Model.extend({
         // TODO: handle sync errors
         // hack: this nonsense is because I dont have a specialized model...
         attributes.locationCategoryId = this.id;
-        this.set(attributes); // merge attributes as in the stok save() method
+        this.set(attributes); // merge attributes as in the stock save() method
 
         var model = this;
-        console.log("Saving selected category to locationCheckRounds");
         var headers = app.getSecurityHeaders();
         var data = JSON.stringify(model.toJSON(options));
-        $.ajax({
-            url: app.config.api_url + 'api/locationCheckRounds',
-            type: "POST",
-            contentType: "application/json",
-            data: data,
-            headers: headers
-        }).done(function (response) {
-            // this service returns the generated identity value
-            // hack: have to use a new field here because I haven't created a specialized model
-            model.roundId = response;
-            app.round.id = model.roundId;
-            options.success(response);
-        }).fail(function (error) {
-            options.error(error);
-        });
+        if (!options.patch) {
+            console.log("Saving selected category to locationCheckRounds");
+            $.ajax({
+                url: app.config.api_url + 'api/locationCheckRounds',
+                type: "POST",
+                contentType: "application/json",
+                data: data,
+                headers: headers
+            }).done(function (response) {
+                // this service returns the generated identity value
+                // hack: have to use a new field here because I haven't created a specialized model
+                model.roundId = response;
+                app.round.id = model.roundId;
+                options.success(response);
+            }).fail(function (error) {
+                options.error(error);
+            });
+        }
+        else {
+            console.log("Saving patch to locationCheckRound/{id}");
+            $.ajax({
+                url: app.config.api_url + 'api/locationCheckRound/' + app.round.id,
+                type: "PATCH",
+                contentType: "application/json",
+                data: data,
+                headers: headers
+            }).done(function (response) {
+                options.success(response);
+            }).fail(function (error) {
+                options.error(error);
+            });
+        }
     }
 });
 app.models.LocationCategoryCollection = Backbone.Collection.extend({
