@@ -9,6 +9,6 @@
             <span class="topcoat-icon icomatic">checkmark</span> 
             scanned ({{formatTime model.dateChecked}})
         </span>
-        <a class="comments topcoat-icon icomatic">comment</a>
+        <a class="comments topcoat-icon icomatic {{#if model.comment}}hasValue{{/if}}">comment</a>
     {{/if}}
 </li>

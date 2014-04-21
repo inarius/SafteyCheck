@@ -5,6 +5,7 @@ app.views.HomeView = Backbone.View.extend({
         //global events
         _.bindAll(this, 'showLogin'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         _.bindAll(this, 'onNfcLocation'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
+        _.bindAll(this, 'syncLocationChecks'); // "_.bindAll() changes 'this' in the named functions to always point to that object"
         app.eventBus.on("showLogin:home", this.showLogin); // call to execute: App.eventBus.trigger("showLogin:home");
         app.eventBus.on("onNfcLocation:home", this.onNfcLocation); // call to execute: app.eventBus.trigger("onNfcLocation:home", nfcEvent, ndefMessageIndex);
 
@@ -19,7 +20,7 @@ app.views.HomeView = Backbone.View.extend({
 
     render: function () {
         this.$el.empty();
-        this.$el.html(this.template());
+        this.$el.html(this.template({model: this.model.attributes}));
 
         //TODO: to alter spinner size: vary the width, radius, and lines
         var opts = {
@@ -75,15 +76,7 @@ app.views.HomeView = Backbone.View.extend({
             payload.location_code = payload.uri.match('[^/]*$')[0];
             var location = this.model.allLocations.get(payload.location_code);
             location.set("dateChecked", new Date().toLocaleString());
-            this.model.allLocations.sync("update", null, {  // to the web services! (save[patch] all every time incase we lost connection somewhere)
-                success: function (response) {
-                    console.log('location checks saved ' + response);
-                },
-                error: function (error) {
-                    // TODO: do something here!
-                    console.log('failed to save location checks: ' + error);
-                }
-            });
+            this.syncLocationChecks();
         }
         else {
             console.log('Invalid location scanned');
@@ -98,7 +91,19 @@ app.views.HomeView = Backbone.View.extend({
         var $target = $(event.target);
         console.log($target.parent());
         var modalCommentsView = new app.views.LocationCommentsModalView({ model: this.model.allLocations.get($target.parent().attr("id")) });
+        modalCommentsView.parent = this;
         $("body").append(modalCommentsView.render().el);
+    },
+    syncLocationChecks: function () {
+        this.model.allLocations.sync("update", null, {  // to the web services! (save[patch] all every time incase we lost connection somewhere)
+            success: function (response) {
+                console.log('location checks saved to server ' + response);
+            },
+            error: function (error) {
+                // TODO: do something here!
+                console.log('failed to save location checks to server: ' + error);
+            }
+        });
     }
 });
 
@@ -127,12 +132,19 @@ app.views.LocationCommentsModalView = Backbone.Modal.extend({
         this.cancelEl = 'a.cancel';
         this.submitEl = 'a.save';
 
-        // TODO: How best to save the comment? Just write it to the location model and let the parent sync handle it?
-
-        // we can't remder (or bind to) the view ourselves without messing up the Modal?
+        // we can't remder (or bind to) the view ourselves without messing up the Modal
         //this.template = this.template({ model: this.model.attributes });
         //this.model.on("change", this.render, this);
         //this.model.on("destroy", this.close, this);
+
+        // Note: the Modal render function serializes model data to the root instead of wrapping in a "model" object -- so the template refrences attributes at the top-level
+    },
+    // TODO: How best to save the comment? Just write it to the location model and let the parent sync handle it?
+    submit: function () {
+        // TODO: test if they wrote anything
+        this.model.set("comment", $('textarea.comments', this.$el).val());
+        console.log("comments written to memory");
+        app.homeView.syncLocationChecks();
     },
     clickOutside: function (e) {
         return false; // ignore an outside click

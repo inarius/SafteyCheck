@@ -7,6 +7,10 @@ Handlebars.getTemplate = function (name) {
                     Handlebars.templates = {};
                 }
                 Handlebars.templates[name] = Handlebars.compile(data);
+                //console.log(Handlebars.templates[name]);
+                // try a precompile
+                //(new Function("Handlebars.templates['" + name + "'] =" + Handlebars.precompile(data)))();
+                //console.log(Handlebars.templates[name]);
             },
             async: false
         });
