@@ -1,3 +1,26 @@
+/*
+IMPORTANT - done
+*/
+
+/*
+Highly Desireable
+*/
+// TODO: Sessions
+// TODO: Notifications (unobtrusive)
+// TODO: Go through all my TODOs
+// TODO: Handle failed API calls to allow retry/logoff (especially the finish button and route types)
+// TODO: Manual login (or at least remove it)
+// TODO: NFC write
+// TODO: Session expiration (client)
+
+/*
+NOT important
+*/
+// TODO: Disable back and menu
+// TODO: More polish (icons and maybe a splash)
+// TODO: Session expiration (server)
+// TODO: Fix models
+
 var config = {};
 config.api_url = "http://157.145.184.4:58914/";
 config.userInfo_api_url = config.api_url + "api/Account/UserInfo";
@@ -31,6 +54,30 @@ var app = {
 		//app.showInstructions("Starting. Please wait...");
 	},
 	eventBus: _.extend({}, Backbone.Events),
+    // call the notifier like this: app.notifier.notify({message:'Hello notifier!',type:'error'});
+	notifier: new Backbone.Notifier({	
+	    el: 'body', 	// container for notification (default: 'body')
+	    //baseCls: 'notifier',// css classes prefix, should match css file. Change to solve conflicts.
+	    theme: 'dark',// default theme for notifications (available: 'plastic'/'clean').
+	    //types: ['warning', 'error', 'info', 'success'],// available notification styles
+	    type: null, 	// default notification type (null/'warning'/'error'/'info'/'success')
+	    dialog: false,	// whether display the notification with a title bar and a dialog style.
+	    modal: false,	// whether to dark and block the UI behind the notification (default: false)
+	    title: undefined,// default notification title, if defined, causes the notification to be 'dialog' (unless dialog is 'false')
+	    closeBtn: false, // whether to display an enabled close button on notification
+	    ms: 10000,	// milliseconds before hiding (null || false => no timeout) (default: 10000)
+	    'class': null, // additional css class
+	    hideOnClick: true,// whether to hide the notifications on mouse click (default: true)
+	    loader: false,	// whether to display loader animation in notifications (default: false)
+	    destroy: false,// notification or selector of notifications to hide on show (default: false)
+	    opacity: .9,	// notification's opacity (default: 1)
+	    offsetY: 0,	// distance between the notifications and the top/bottom edge (default: 0)
+	    fadeInMs: 500,	// duration (milliseconds) of notification's fade-in effect (default: 500)
+	    fadeOutMs: 500,	// duration (milliseconds) of notification's fade-out effect (default: 500)
+	    position: 'bottom',// default notifications position ('top' / 'center' / 'bottom')
+	    zIndex: 10000,	// minimal z-index for notifications
+	    screenOpacity: 0.5// opacity of dark screen background that goes behind for modals (0 to 1)
+	}),
 	openMenu: function () {
 		$('#right').animate({ translate3d:'260px,0,0' }, 200);
 		//$('#right').animate({ left: 250 }, 350);
