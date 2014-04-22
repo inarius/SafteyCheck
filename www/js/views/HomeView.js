@@ -100,7 +100,6 @@ app.views.HomeView = Backbone.View.extend({
 
     },
     onFinishClick: function(event) {
-        // TODO: create a new specialized route model here instead of using LocationCategory and copy the locations over
         // TODO? create an app method for this save and use promise callback approach (to handle errors/logic)?
         // use LocationCategory to save the route finish
         app.round.type.save({ endDate: new Date().toLocaleString() }, {
@@ -108,21 +107,21 @@ app.views.HomeView = Backbone.View.extend({
             timeout: 8000, // 8 sec. timeout
             success: function (response) {
                 console.log('round end saved');
-                self.fetchFailNotifier = app.notifier.notify({
+                app.notifier.notify({
                     type: 'success',
                     message: 'Security check completed sucessfully!',
-                    destroy: true // kill the notification in case it's open from a prior failure
+                    destroy: true // kill other notifications in case it's open from a prior failure
                 })
-                // TODO: Add a nice completion message!
+                app.reinitialize();
                 window.location = "#login";
             },
             error: function (error) {
                 // TODO: do something here!
                 console.log('failed to save round end: ' + error);
-                self.fetchFailNotifier = app.notifier.notify({
+                app.notifier.notify({
                     type: 'error',
                     message: 'Failed to reach the server. Press finish again to retry.',
-                    destroy: true // kill the notification in case it's open from a prior failure
+                    destroy: true // kill other notifications in case it's open from a prior failure
                 })
             }
         });

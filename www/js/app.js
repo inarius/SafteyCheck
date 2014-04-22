@@ -5,21 +5,21 @@ IMPORTANT - done
 /*
 Highly Desireable
 */
-// TODO: Sessions
-// TODO: Notifications (unobtrusive)
-// TODO: Go through all my TODOs
-// TODO: Handle failed API calls to allow retry/logoff (especially the finish button and route types)
+// TODO: Go through all my TODOs (add to GitHub?)
+// TODO: Session end
+// TODO: Session expiration (client)
 // TODO: Manual login (or at least remove it)
 // TODO: NFC write
-// TODO: Session expiration (client)
+// TODO: Handle failed API calls to allow retry/logoff (loading location list)
+// TODO: Auto scrolling (locations list)
 
 /*
 NOT important
 */
 // TODO: Disable back and menu
-// TODO: More polish (icons and maybe a splash)
 // TODO: Session expiration (server)
 // TODO: Fix models
+// TODO: More polish (maybe a splash)
 
 var config = {};
 config.api_url = "http://157.145.184.4:58914/";
@@ -33,18 +33,17 @@ var app = {
     routers: {},
     utils: {},
     adapters: {},
-    user: { 
-        session: null,
-        auth: null,
-        userTagMessage: null
-    },
     currentPage: null,
     round: {
         type: {},
         locations: {}
     },
+    user: {
+        session: null,
+        auth: null,
+        userTagMessage: null
+    },
     writeNfc: false, // TODO: DON'T DO THIS!
-	scans: [],
 	initialize: function () {
 	    //app.clearScreen();
 	    app.slider = new PageSlider($('body'));
@@ -52,6 +51,19 @@ var app = {
         app.compileTemplates();
 		app.addTemplateHelpers();
 		//app.showInstructions("Starting. Please wait...");
+	},
+	reinitialize: function() { // clear all session-specific data so the app can be reused (should be headed to the login screen)
+	    delete app.homeView.model;
+	    delete app.loginView.model;
+	    delete app.homeView;
+	    delete app.loginView;
+	    delete app.user.session;
+	    delete app.user.auth;
+	    delete app.user.userTagMessage;
+	    delete app.currentPage;
+	    delete app.round.type;
+	    delete app.round.locations;
+	    delete app.writeNfc;
 	},
 	eventBus: _.extend({}, Backbone.Events),
     // call the notifier like this: app.notifier.notify({message:'Hello notifier!',type:'error'});

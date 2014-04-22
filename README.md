@@ -48,13 +48,15 @@ not be packed and submitted to the build service.
 Application files
 -----------------
 These files (only) must be included in the PhoenGap Build package:
++ \config.xml
++ \icon.png
++ \resources\*
 + \www\css\*
 + \www\font\*
 + \www\js\*
 + \www\lib\*
 + \www\views\*
 + \www\index.html
-+ \www\config.xml
 + \www\start.html
 
 Remote debugging (for testing)
