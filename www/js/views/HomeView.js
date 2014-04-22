@@ -50,6 +50,9 @@ app.views.HomeView = Backbone.View.extend({
 
 
     bindDOM: function () {
+        this.spinner.spin();
+        $('#locations-list', this.el).append(this.spinner.el);
+
         // No menu needed
         //$('#side-menu-button.off', this.el).on('click', app.openMenu);
         //$('#side-menu-button.on', this.el).on('click', app.closeMenu);
