@@ -52,3 +52,6 @@
   text-align:center;
   padding: .5em .6em;
 }
+.bbm-modal__bottombar a {
+  text-decoration:none;
+}

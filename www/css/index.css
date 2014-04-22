@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   color: #F0F1F1;
+  overflow:hidden;
 }
 a {
     color: #cccdce;
@@ -9,9 +10,9 @@ a {
     text-decoration:underline;
 }
 .topcoat-icon a,
-.topcoat-icon.a,
+a.topcoat-icon,
 .icomatic a,
-.icomatic.a {
+a.icomatic {
     text-decoration:none;
 }
 a:hover {
@@ -233,6 +234,11 @@ div.record {
 
 .home-page ol {
     font-size: 110%;
+    overflow-y: scroll;
+    position: absolute;
+    width: 100%;
+    top: 6.375rem; /* topcoat header (4.375rem) + topcoat-list__header (~1rem) + a little space (~1rem) */
+    bottom: 0px;
 }
 .home-page ol li {
     color: #e0e1e1;
@@ -241,7 +247,6 @@ div.record {
 .home-page ol li.unchecked {
     color: #888;
     text-shadow: 2px 1px 2px #222;
-    background-color: #4c4c4c;
 }
 .home-page ol li a.comments {
     /*color:#cccdce;*/
