@@ -4,7 +4,7 @@
 // LocationCategories
 app.models.LocationCategory = Backbone.Model.extend({
     initialize: function () {
-        this.uri = app.config.api_url + 'api/locationCategory/' + this.id;
+        this.uri = app.config.api_url + 'locationCategory/' + this.id;
         this.allLocations = new app.models.LocationCollection({}, { parent: this });
         //this.checkedLocations = new app.models.LocationCollection({}, { parent: this });
         // TODO? can we make checkedLocations a function() of allLocations?
@@ -21,7 +21,7 @@ app.models.LocationCategory = Backbone.Model.extend({
         if (!options.patch) {
             console.log("Saving selected category to locationCheckRounds");
             $.ajax({
-                url: app.config.api_url + 'api/locationCheckRounds',
+                url: app.config.api_url + 'locationCheckRounds',
                 type: "POST",
                 contentType: "application/json",
                 data: data,
@@ -39,7 +39,7 @@ app.models.LocationCategory = Backbone.Model.extend({
         else {
             console.log("Saving patch to locationCheckRound/{id}");
             $.ajax({
-                url: app.config.api_url + 'api/locationCheckRound/' + app.round.id,
+                url: app.config.api_url + 'locationCheckRound/' + app.round.id,
                 type: "PATCH",
                 contentType: "application/json",
                 data: data,
@@ -54,7 +54,7 @@ app.models.LocationCategory = Backbone.Model.extend({
 });
 app.models.LocationCategoryCollection = Backbone.Collection.extend({
     model: app.models.LocationCategory,
-    url: app.config.api_url + 'api/locationCategories.json?table=' + app.config.locationsCodeTable
+    url: app.config.api_url + 'locationCategories.json?table=' + app.config.locationsCodeTable
 });
 
 // Locations
@@ -111,7 +111,7 @@ app.models.LocationCollection = Backbone.Collection.extend({
                 .toJSON(options)
                 );
             $.ajax({
-                url: app.config.api_url + 'api/locationCheckRound/' + this.parent.roundId + '/locations',
+                url: app.config.api_url + 'locationCheckRound/' + this.parent.roundId + '/locations',
                 type: "PATCH",
                 contentType: "application/json",
                 data: data,

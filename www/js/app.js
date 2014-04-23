@@ -22,8 +22,8 @@ NOT important
 // TODO: Don't scroll *too much* (locations list -- only off-screen -- not when off screen )
 
 var config = {};
-config.api_url = "http://157.145.184.4:58914/";
-config.userInfo_api_url = config.api_url + "api/Account/UserInfo";
+config.api_url = "https://probation-dev.co.ventura.ca.us/api/";
+config.userInfo_api_url = config.api_url + "Account/UserInfo";
 config.locationsCodeTable = "WFLOC";
 
 var app = {
@@ -145,7 +145,7 @@ var app = {
 	},
 	getLocations: function () {
 	    console.log("Getting possible locations on route");
-	    var userInfoUrl = app.config.api_url + "api/Account/UserInfo";
+	    var userInfoUrl = app.config.api_url + "Account/UserInfo";
 	    var headers = app.getSecurityHeaders();
 	    return $.ajax({
 	        url: userInfoUrl,
