@@ -14,7 +14,7 @@ select * from barcode
 
 /*
 -- INSERTS (data has already been inserted)
-
+    
 -- Code entries
 INSERT INTO probation.dbo.code_mstr VALUES ('WFLOC', 2, 'Work Furlough Locations')
 

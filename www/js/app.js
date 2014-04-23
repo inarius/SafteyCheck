@@ -6,23 +6,23 @@ IMPORTANT - done
 Highly Desireable
 */
 // TODO: Go through all my TODOs (add to GitHub?)
-// TODO: Session end
 // TODO: Session expiration (client)
 // TODO: Manual login (or at least remove it)
 // TODO: NFC write
 // TODO: Handle failed API calls to allow retry/logoff (loading location list)
-// TODO: Auto scrolling (locations list)
 
 /*
 NOT important
 */
-// TODO: Disable back and menu
 // TODO: Session expiration (server)
 // TODO: Fix models
 // TODO: More polish (maybe a splash)
+// TODO: Kiosk mode (tablet)
+// TODO: Tear out unused (sample) code
+// TODO: Don't scroll *too much* (locations list -- only off-screen)
 
 var config = {};
-config.api_url = "http://157.145.184.4:58914/";
+config.api_url = "http://11.0.0.118:58914/";
 config.userInfo_api_url = config.api_url + "api/Account/UserInfo";
 config.locationsCodeTable = "WFLOC";
 
@@ -149,8 +149,11 @@ var app = {
 	bindDevice: function () {
 	    document.addEventListener('deviceready', this.deviceready, false);
 	},
-    deviceready: function () {
-        document.addEventListener("menubutton", app.openMenu, false);
+	deviceready: function () {
+        // no menu for now
+        //document.addEventListener("menubutton", app.openMenu, false);
+        document.addEventListener("menubutton", function (e) { e.stopImmediatePropagation(); }, false);
+        document.addEventListener("backbutton", function (e) { e.stopImmediatePropagation(); }, false);
         function failure(reason) {
             navigator.notification.alert(reason, function() {}, "There was a problem");
         }

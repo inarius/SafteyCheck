@@ -143,7 +143,11 @@ app.views.LocationListItemView = Backbone.View.extend({
 
     initialize: function () {
         // TODO: Need to call a function and try to sync on change
-        this.model.on("change", this.render, this);
+        var self = this;
+        this.model.on("change", function () {
+            self.render();
+            self.$el.parent().scrollToTop(self.$el.offset().top, { absolute: true }); // scroll to the latest scan!
+        }, this);
         this.model.on("destroy", this.close, this);
     },
 
