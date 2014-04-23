@@ -3,8 +3,10 @@
 
   $.fn.scrollToTop = function (position, options) {
     var $this = this;
-    if (typeof options != "undefined" && options.absolute) // absolute positioning requires an offset position relative to the element/scroll position
-        position = position + $this.scrollTop() - $this.position().top;
+    if (typeof options != "undefined") {
+        if (options.absolute) // absolute positioning requires an offset position relative to the element/scroll position
+            position = position + $this.scrollTop() - $this.position().top;
+    }
     var targetY = position || 0,
         initialY = $this.scrollTop(),
         lastY = initialY,
@@ -14,7 +16,20 @@
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         function(callback){ setTimeout(callback,15) },
-        cancelScroll = function(){ abort() }
+        cancelScroll = function () { abort() }
+
+    function abort() {
+        $this.off('touchstart', cancelScroll)
+        scrollToTopInProgress = false
+    }
+
+    if (typeof options != "undefined") {
+        if (options.ifOffScreen)
+            if (delta < 0 || delta < $this.height()) {
+                abort();
+                return; // don't bother scrolling if the position in on screen
+            }
+    }
 
     if (scrollToTopInProgress) return
     if (delta == 0) return
@@ -22,11 +37,6 @@
     function smooth(pos){
       if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5)
       return 0.5 * (Math.pow((pos-2),5) + 2)
-    }
-
-    function abort(){
-      $this.off('touchstart', cancelScroll)
-      scrollToTopInProgress = false
     }
 
     $this.on('touchstart', cancelScroll)

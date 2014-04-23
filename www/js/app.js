@@ -19,10 +19,10 @@ NOT important
 // TODO: More polish (maybe a splash)
 // TODO: Kiosk mode (tablet)
 // TODO: Tear out unused (sample) code
-// TODO: Don't scroll *too much* (locations list -- only off-screen)
+// TODO: Don't scroll *too much* (locations list -- only off-screen -- not when off screen )
 
 var config = {};
-config.api_url = "http://11.0.0.118:58914/";
+config.api_url = "http://157.145.184.4:58914/";
 config.userInfo_api_url = config.api_url + "api/Account/UserInfo";
 config.locationsCodeTable = "WFLOC";
 
@@ -52,11 +52,15 @@ var app = {
 		app.addTemplateHelpers();
 		//app.showInstructions("Starting. Please wait...");
 	},
-	reinitialize: function() { // clear all session-specific data so the app can be reused (should be headed to the login screen)
-	    delete app.homeView.model;
-	    delete app.loginView.model;
-	    delete app.homeView;
-	    delete app.loginView;
+	reinitialize: function () { // clear all session-specific data so the app can be reused (should be headed to the login screen)
+	    if (app.homeView) {
+	        app.homeView.close();
+	        delete app.homeView;
+	    }
+	    if (app.loginView) {
+	        app.loginView.close();
+	        delete app.loginView;
+	    }
 	    delete app.user.session;
 	    delete app.user.auth;
 	    delete app.user.userTagMessage;
@@ -64,6 +68,9 @@ var app = {
 	    delete app.round.type;
 	    delete app.round.locations;
 	    delete app.writeNfc;
+	    //window.location = "#login";
+	    //location.reload();
+	    //navigator.app.loadUrl('file:///android_asset/www/index.html');
 	},
 	eventBus: _.extend({}, Backbone.Events),
     // call the notifier like this: app.notifier.notify({message:'Hello notifier!',type:'error'});

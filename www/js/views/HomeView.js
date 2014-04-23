@@ -18,6 +18,12 @@ app.views.HomeView = Backbone.View.extend({
         });
     },
 
+    onClose: function () {
+        // unbind model events
+        this.model.allLocations.off("reset", this.render);
+        this.model.allLocations.off("add");
+    },
+    
     render: function () {
         this.$el.empty();
         this.$el.html(this.template({model: this.model.attributes}));
@@ -47,7 +53,6 @@ app.views.HomeView = Backbone.View.extend({
         }, this);
         return this;
     },
-
 
     bindDOM: function () {
         this.spinner.spin();
@@ -146,7 +151,7 @@ app.views.LocationListItemView = Backbone.View.extend({
         var self = this;
         this.model.on("change", function () {
             self.render();
-            self.$el.parent().scrollToTop(self.$el.offset().top, { absolute: true }); // scroll to the latest scan!
+            self.$el.parent().scrollToTop(self.$el.offset().top, { absolute: true, ifOffScreen: true }); // scroll to the latest scan!
         }, this);
         this.model.on("destroy", this.close, this);
     },
@@ -175,6 +180,7 @@ app.views.LocationCommentsModalView = Backbone.Modal.extend({
 
         // Note: the Modal render function serializes model data to the root instead of wrapping in a "model" object -- so the template refrences attributes at the top-level
     },
+
     // TODO: How best to save the comment? Just write it to the location model and let the parent sync handle it?
     submit: function () {
         // TODO: test if they wrote anything

@@ -10,6 +10,27 @@ app.views.LoginFormView = Backbone.View.extend({
         });
     },
 
+    onClose: function () {
+        // unbind model events
+        this.model.off("reset", this.render);
+        this.model.off("add");
+    },
+
+    destroy: function () {
+        // destroy the model
+        if (this.model)
+            this.model.destroy();
+        delete this.model;
+
+        //COMPLETELY UNBIND THE VIEW
+        this.undelegateEvents();
+        this.$el.removeData().unbind();
+
+        //Remove view from DOM
+        this.remove();
+        Backbone.View.prototype.remove.call(this);
+    },
+
     render: function () {
         this.$el.empty();
         this.$el.html(this.template());
@@ -96,6 +117,12 @@ app.views.LocationCategoryButtonView = Backbone.View.extend({
     initialize: function () {
         this.model.on("change", this.render, this);
         this.model.on("destroy", this.close, this);
+    },
+
+    onClose: function () {
+        // unbind model events
+        this.model.off("change", this.render);
+        this.model.off("destroy", this.close);
     },
 
     render: function () {

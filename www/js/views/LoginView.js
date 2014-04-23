@@ -11,6 +11,12 @@ app.views.LoginView = Backbone.View.extend({
         app.eventBus.on("writeNfcPrismUser:login", this.writeNfcPrismUser); // call to execute: app.eventBus.trigger("writeNfcPrismUser:login", authenticationData);
     },
 
+    onClose: function () {
+        // destroy the child forms
+        if (this.loginFormView)
+            this.loginFormView.close();
+    },
+
     render: function () {
         this.$el.html(this.template());
         this.bindDOM();

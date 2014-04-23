@@ -1,3 +1,28 @@
+// TODO? Put framework extensions somewhere else? in app?
+Backbone.View.prototype.close = function () {
+    //COMPLETELY UNBIND THE VIEW
+    this.undelegateEvents();
+    //if (this.$el)
+    //    this.$el.removeData().unbind();
+    this.unbind();
+    if (this.onClose) {
+        this.onClose();
+    }
+
+    //Remove view from DOM
+    this.remove();
+    //Backbone.View.prototype.remove.call(this);
+
+    // destroy the model
+    if (this.model) {
+        if (this.model.reset)
+            this.model.reset();
+        if (this.model.destroy)
+            this.model.destroy();
+    }
+    //delete this.model;
+}
+
 app.routers.AppRouter = Backbone.Router.extend({
     routes: {
         "":                         "home",
