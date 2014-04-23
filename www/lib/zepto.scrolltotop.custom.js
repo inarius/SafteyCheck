@@ -25,7 +25,7 @@
 
     if (typeof options != "undefined") {
         if (options.ifOffScreen)
-            if (delta < 0 || delta < $this.height()) {
+            if (delta > 0 && delta < $this.height()) {
                 abort();
                 return; // don't bother scrolling if the position in on screen
             }
