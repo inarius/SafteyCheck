@@ -103,30 +103,33 @@ app.views.LoginView = Backbone.View.extend({
         //TODO? harcode route buttons?
     },
     writeNfcPrismUser: function (authenticationData) {
+		/*
+		// write NFC (someday)
         app.user.userTagMessage.otp = "test";
         if (typeof nfc != "undefined") {
             var record = ndef.mimeMediaRecord("application/prismuser", nfc.stringToBytes(
                 JSON.stringify(app.user.userTagMessage)
             ));
-            //nfc.addTagDiscoveredListener(
-            nfc.write({
-                message: ndef.textRecord("Plain text message"),
-                onSucess: function () {
-                    navigator.notification.vibrate(100);
-                    alert("yay!");
-                },
-                onFailure: function (reason) {
-                    navigator.notification.alert(reason, function () { }, "There was a problem");
-                    alert("boo!");
-                    console.log("boo! " + reason);
-                    // TODO: dont store token and prompt for tag again - if we don't get it kick us back out to the login page
-                }
-            });
-            //    }), 
-            //    console.log("Listening for NDEF tags to write to"),
-            //    alert('Failed to register NFC Listener')
-            //);
+            nfc.addTagDiscoveredListener(
+                nfc.write({
+                    message: ndef.textRecord("Plain text message"),
+                    onSucess: function () {
+                        navigator.notification.vibrate(100);
+                        alert("yay!");
+                    },
+                    onFailure: function (reason) {
+                        navigator.notification.alert(reason, function () { }, "There was a problem");
+                        alert("boo!");
+                        console.log("boo! " + reason);
+                        // TODO: dont store token and prompt for tag again - if we don't get it kick us back out to the login page
+                    }
+                    //});
+                }),
+                    console.log("Listening for NDEF tags to write to"),
+                    alert('Failed to register NFC Listener')
+                );
         }
+        */
 
         // TODO: only if sucessfully written...
         app.writeNfc = false;

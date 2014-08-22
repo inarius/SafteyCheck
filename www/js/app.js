@@ -5,6 +5,7 @@ IMPORTANT - done
 /*
 Highly Desireable
 */
+// TODO? Please wait? (splash) Am I scanning NFC before device is ready and listeners attach?
 // TODO: Go through all my TODOs (add to GitHub?)
 // TODO: Session expiration (client)
 // TODO: Manual login (or at least remove it)
@@ -20,8 +21,10 @@ NOT important
 // TODO: Kiosk mode (tablet)
 // TODO: Tear out unused (sample) code
 // TODO: Don't scroll *too much* (locations list -- only off-screen -- not when off screen )
+// TODO: Investigate Fastclick: https://github.com/ftlabs/fastclick
 
 var config = {};
+//config.api_url = "http:///localhost:8090/api/";
 config.api_url = "https://probation-dev.co.ventura.ca.us/api/";
 config.userInfo_api_url = config.api_url + "Account/UserInfo";
 config.locationsCodeTable = "WFLOC";
@@ -74,7 +77,7 @@ var app = {
 	},
 	eventBus: _.extend({}, Backbone.Events),
     // call the notifier like this: app.notifier.notify({message:'Hello notifier!',type:'error'});
-	notifier: new Backbone.Notifier({	
+	notifier: new Backbone.Notifier({
 	    el: 'body', 	// container for notification (default: 'body')
 	    //baseCls: 'notifier',// css classes prefix, should match css file. Change to solve conflicts.
 	    theme: 'dark',// default theme for notifications (available: 'plastic'/'clean').
@@ -192,10 +195,44 @@ var app = {
         app.runLogic();
     },
     onNdef: function (nfcEvent) {
+        console.log("NDEF!");
+        /*
+        // write mode testing
         if (app.writeNfc) {
+            console.log("are we suppossed to be in write mode?");
             app.eventBus.trigger("writeNfcPrismUser:login", null);
             return;
+        } else {
+            console.log("We are not in write mode!");
+            //app.user.userTagMessage.otp = "test";
+            if (typeof nfc != "undefined") {
+                //var record = ndef.mimeMediaRecord("application/prismuser", nfc.stringToBytes(
+                //    JSON.stringify(app.user.userTagMessage)
+                //));
+                //nfc.addTagDiscoveredListener(
+                    nfc.write({
+                        message: ndef.textRecord("Plain text message"),
+                        onSucess: function () {
+                            //navigator.notification.vibrate(100);
+                            //alert("yay!");
+                            console.log("yay!");
+                        },
+                        onFailure: function (reason) {
+                            //navigator.notification.alert(reason, function () { }, "There was a problem");
+                            //alert("boo!");
+                            console.log("boo! " + reason);
+                            // TODO: dont store token and prompt for tag again - if we don't get it kick us back out to the login page
+                        }
+                    });
+                    //}),
+                    //function(e) { console.log("Listening for NDEF tags to write to" + e) },
+                    //function (e) { console.log('Failed to register NFC Listener: ' + e) }
+                //);
+            }
+            return; // EXIT
+            app.writeNfc = true;
         }
+        */
         debug.nfcEvent = nfcEvent;
         console.log("debug.nfcEvent stored");
         console.log("encoded nfcEvent.tag: " + JSON.stringify(nfcEvent.tag));

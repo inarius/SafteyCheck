@@ -51,7 +51,7 @@ var debug = {
 // preload some fake nfc tags for testing
 debug.sampleNfcEvent = debug.buildTestNfc({
     type: "application/prismuser",
-    payload: '{"tag":1,"login":"simonej","otp":"1234567890"}'
+    payload: '{"tag":1,"login":"121880","otp":"1234567890"}'
 });
 debug.nfcLocation = function (id) {
     return debug.buildTestNfc({

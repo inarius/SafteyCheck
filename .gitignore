@@ -154,3 +154,9 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/documentation
+
+# Extra files ignored within Visual Studio IDE
+/sql/sample output.txt
+/pitma-demo.txt
+*.zip

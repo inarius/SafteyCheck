@@ -80,8 +80,9 @@ app.models.LocationCollection = Backbone.Collection.extend({
         options = options || {};
         if (method === "read") {
             // TODO: add direct support for deferred / adapter (promise) interface
-            console.log("Getting possible locations on route");
+            console.log("Getting possible locations on route: " + this.url);
             var headers = app.getSecurityHeaders();
+            console.log("using headers: " + headers);
             $.ajax({
                 url: this.url,
                 cache: false,
