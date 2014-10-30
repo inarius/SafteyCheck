@@ -48,6 +48,7 @@ var app = {
     },
     writeNfc: false, // TODO: DON'T DO THIS!
 	initialize: function () {
+	    console.log("initialize()");
 	    //app.clearScreen();
 	    app.slider = new PageSlider($('body'));
         app.bindDevice();
@@ -157,9 +158,11 @@ var app = {
 	    });
 	},
 	bindDevice: function () {
+	    console.log("bindDevice()");
 	    document.addEventListener('deviceready', this.deviceready, false);
 	},
 	deviceready: function () {
+        console.log("deviceready()");
         // no menu for now
         //document.addEventListener("menubutton", app.openMenu, false);
         document.addEventListener("menubutton", function (e) { e.stopImmediatePropagation(); }, false);
@@ -175,6 +178,9 @@ var app = {
                 },
                 failure
             );
+            // disabled because I think this interferes with the Ndef binding
+            // TODO: look at this again with AndroidMainfest.xml binding
+            /*
             if (device.platform == "Android") {
                 // Android launches the app when tags with mime type text/pg are scanned
                 // because of an intent in AndroidManifest.xml.
@@ -188,14 +194,14 @@ var app = {
                     failure
                 );
             };
+            */
         }
         else {
             console.log("No NFC. We must be testing...");
         }
-        app.runLogic();
     },
     onNdef: function (nfcEvent) {
-        console.log("NDEF!");
+        console.log("NDEF!!!");
         /*
         // write mode testing
         if (app.writeNfc) {
@@ -270,17 +276,14 @@ var app = {
                     break;
             }
         }
-
-        app.scans[app.scans.length] = decodePayload(tag.ndefMessage[0]);
-        console.log('new scan history: ' + JSON.stringify(app.scans));
-        tagContents.innerHTML = app.tagStatusTemplate(tag) + app.tagListTemplate(app.scans);
-        navigator.notification.vibrate(100);
-        app.hideInstructions();
-        app.runLogic();
+        if (typeof app.scans != "undefined") {
+            app.scans[app.scans.length] = decodePayload(tag.ndefMessage[0]);
+            console.log('new scan history: ' + JSON.stringify(app.scans));
+            navigator.notification.vibrate(100);
+        }
     },
     clearScreen: function () {
-        tagContents.innerHTML = "";
-        messageContents.innerHTML = "";
+        // TODO: Something?
     },
     showInstructions: function (text) {
         console.log("showing instructions text: " + text);
@@ -296,24 +299,6 @@ var app = {
         var instructions = document.getElementsByClassName('instructions');
         if (instructions && instructions.length) {
             instructions[0].className += ' hidden';
-        }
-    },
-    runLogic: function () {
-        if (app.scans.length == 0)
-            app.showInstructions("Ready! Please start by scanning Miguel...");
-        else if (app.scans.length >= 5) {
-            app.showInstructions("I think that's about enough scanning. Don't you?");
-            app.onNdef = function () { };
-        }
-        else {
-            if ($.inArray("Miguel", app.scans) == -1)
-                app.showInstructions("That's not Miguel...");
-            else {
-                if ($.inArray("Jason", app.scans) == -1)
-                    app.showInstructions("Now scan Jason...");
-                else
-                    app.showInstructions("You scanned everyone!");
-            }
         }
     },
     compileTemplates: function () {
@@ -473,10 +458,8 @@ function testStart() {
     app.deviceready();
 }
 function testScan(string) {
-    app.scans[app.scans.length] = string;
-    tagContents.innerHTML = app.tagStatusTemplate(string) + app.tagListTemplate(app.scans);
-    app.hideInstructions();
-    app.runLogic();
+    if (typeof app.scans != "undefined")
+        app.scans[app.scans.length] = string;
 }
 
 function clone(obj) {
