@@ -51,12 +51,12 @@ var debug = {
 // preload some fake nfc tags for testing
 debug.sampleNfcEvent = debug.buildTestNfc({
     type: "application/prismuser",
-    payload: '{"tag":1,"login":"121880","otp":"1234567890"}'
+    payload: '{"id":69,"uri":"https://probation.co.ventura.ca.us/id/employee/121880","otp":"1234567890","login":"121880"}'
 });
 debug.nfcLocation = function (id) {
     return debug.buildTestNfc({
         type: "application/location",
-        payload: '{"tag":' + (900 + parseInt(id)) + ',"uri":"https://probation.co.ventura.ca.us/id/location/' + (99900 + parseInt(id)) + '"}'
+        payload: '{"id":' + parseInt(id) + ',"uri":"https://probation.co.ventura.ca.us/id/location/' + (99900 + parseInt(id)) + '"}'
     });
 }
 
