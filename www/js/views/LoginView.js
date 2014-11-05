@@ -75,7 +75,7 @@ app.views.LoginView = Backbone.View.extend({
                 console.log(error);
                 console.log("LocationCategory API call failed: " + error);
                 self.fetchFailNotifier = app.notifier.notify({
-                    message: 'Failed to reach the server: <a id="retryLocationCategories" href="#nowhere">Rety now</a>',
+                    message: 'Failed to reach the server: <a id="retryLocationCategories" href="#nowhere">Retry now</a>',
                     destroy: true, // kill the notification in case it's open from a prior failure
                     type: 'error',
                     ms: null,
