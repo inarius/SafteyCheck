@@ -5,7 +5,6 @@ IMPORTANT - done
 /*
 Highly Desireable
 */
-// TODO? Please wait? (splash) Am I scanning NFC before device is ready and listeners attach?
 // TODO: Go through all my TODOs (add to GitHub?)
 // TODO: Session expiration (client)
 // TODO: Manual login (or at least remove it)

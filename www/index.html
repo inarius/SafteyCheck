@@ -7,7 +7,7 @@
     function writeViewport() {
         var ua = navigator.userAgent;
         var viewportChanged = false;
-        if (ua.indexOf("Android") >= 0) {
+        if (true || ua.indexOf("Android") >= 0) {
             var chromeVer = navigator.userAgent.match('Chrome/([0-9]+)');
             if (chromeVer != null && parseInt(chromeVer[1]) >= 30) { // Chrome v30+ WebKit
                 document.write('<meta name="viewport" content="width=400, initial-scale=1.5, minimum-scale=1.5, maximum-scale=1.5" />');
